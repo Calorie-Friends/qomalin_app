@@ -1,47 +1,30 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:qomalin_app/ui/pages/SignupPage.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:qomalin_app/router.dart';
 
 void main() async {
   await setupWhenBeforeRunApp();
-  runApp(App());
+  runApp(ProviderScope(child: App()));
 }
 
-class App extends StatelessWidget {
+class App extends ConsumerWidget {
   // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
 
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final r = ref.watch(router);
     return MaterialApp.router(
-      routeInformationParser: _router.routeInformationParser,
-      routerDelegate: _router.routerDelegate,
+      routeInformationParser: r.routeInformationParser,
+      routerDelegate: r.routerDelegate,
       title: 'Flutter Demo',
       theme: ThemeData(
-        primarySwatch: Colors.blue
+          primarySwatch: Colors.blue
       ),
     );
   }
 
-  final _router = GoRouter(
-    routes: [
-      GoRoute(
-        path: '/',
-        pageBuilder: (context, state) {
-          return MaterialPage(key: state.pageKey, child: MyHomePage(title: "test",));
-        }
-      ),
-      GoRoute(
-        path: '/signup',
-        pageBuilder: (context, state) {
-          return MaterialPage(key: state.pageKey, child: SignupPage());
-        }
-      )
-    ],
-    errorPageBuilder: (context, state) {
-      return MaterialPage(key: state.pageKey, child: ErrorPage());
-    }
-  );
+
 }
 
 class ErrorPage extends StatelessWidget {

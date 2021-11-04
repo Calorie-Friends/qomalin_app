@@ -12,6 +12,7 @@ class SignupPage extends ConsumerStatefulWidget {
 class _SignupState extends ConsumerState {
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
         title: Text("認証")
@@ -19,7 +20,7 @@ class _SignupState extends ConsumerState {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Text("認証")
+            Text("認証"),
           ],
         ),
       ),
