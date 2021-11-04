@@ -115,5 +115,6 @@ class _MyHomePageState extends State<MyHomePage> {
 }
 
 Future setupWhenBeforeRunApp() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
 }
