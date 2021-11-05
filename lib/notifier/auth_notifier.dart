@@ -1,6 +1,8 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:qomalin_app/errors/auth_error.dart';
 import 'package:qomalin_app/providers/auth.dart';
 
 enum AuthStateType {
@@ -34,5 +36,28 @@ class AuthNotifier extends StateNotifier {
         this.state = AuthState.authenticated(event);
       }
     });
+  }
+
+  /// Google認証
+  Future signInWithGoogle() async {
+    try {
+      final gUser = await GoogleSignIn(scopes: []).signIn();
+      final googleAuth = await gUser?.authentication;
+      if (googleAuth == null) {
+        throw AuthFailedException();
+      }
+      final cr = GoogleAuthProvider.credential(idToken: googleAuth.idToken, accessToken: googleAuth.accessToken);
+      final uc = await FirebaseAuth.instance.signInWithCredential(cr);
+      if(uc.user == null) {
+        this.state = AuthState.unauthorized();
+      }else{
+        this.state = AuthState.authenticated(uc.user!);
+      }
+
+    } on FirebaseAuthException {
+      this.state = AuthState.unauthorized();
+      throw AuthFailedException();
+    }
+
   }
 }
