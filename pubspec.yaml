@@ -37,6 +37,7 @@ dependencies:
   firebase_analytics: ^8.3.4
   google_sign_in: ^5.1.0
   flutter_signin_button: ^2.0.0
+  geoflutterfire: ^3.0.1
 
 dev_dependencies:
   flutter_test:
