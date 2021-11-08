@@ -1,6 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:qomalin_app/providers/auth.dart';
+import 'package:qomalin_app/providers/firestore.dart';
 import 'package:qomalin_app/router.dart';
 
 void main() async {
@@ -38,7 +40,7 @@ class ErrorPage extends StatelessWidget {
     );
   }
 }
-class MyHomePage extends StatefulWidget {
+class MyHomePage extends ConsumerStatefulWidget {
   MyHomePage({Key? key, required this.title}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
@@ -56,7 +58,7 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends ConsumerState<MyHomePage> {
   int _counter = 0;
 
   void _incrementCounter() {
@@ -115,7 +117,14 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
+        onPressed: () {
+          final uid = ref.read(authNotifierProvider)?.fireAuthUser?.uid;
+          ref.read(testsProvider).add({
+            'title': 'hogehoeg',
+            'text': 'bodypiyopiyo',
+            'user_id': uid,
+          });
+        },
         tooltip: 'Increment',
         child: Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
