@@ -30,6 +30,10 @@ final testsProvider = Provider<CollectionReference<Map<String, dynamic>>>((ref) 
   return ref.read(firestoreProvider).collection('tests');
 });
 
+final testStreamProvider = StreamProvider((ref) {
+  return ref.read(testsProvider).snapshots();
+});
+
 class FirestoreProviders {
   Provider<CollectionReference<User>> userCollectionRefProvider() {
     return _userCollectionRefProvider;
