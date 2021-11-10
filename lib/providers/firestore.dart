@@ -5,7 +5,7 @@ import 'package:qomalin_app/models/entities/question.dart';
 import 'package:qomalin_app/models/entities/user.dart';
 import 'package:qomalin_app/converters.dart';
 
-final firestoreProvider = Provider<FirebaseFirestore>((ref) {
+final _firestoreProvider = Provider<FirebaseFirestore>((ref) {
   return FirebaseFirestore.instance;
 });
 
@@ -17,17 +17,17 @@ final geoFirestoreProvider = Provider<Geoflutterfire>((ref) {
 
 
 final _userCollectionRefProvider = Provider<CollectionReference<User>>((ref){
-  return ref.read(firestoreProvider).collection('users').withUserConverter();
+  return ref.read(_firestoreProvider).collection('users').withUserConverter();
 });
 
 final _questionCollectionRefProvider = Provider<CollectionReference<Question>>((ref) {
-  return ref.read(firestoreProvider).collection('questions').withQuestionConverter();
+  return ref.read(_firestoreProvider).collection('questions').withQuestionConverter();
 });
 
 
 
 final testsProvider = Provider<CollectionReference<Map<String, dynamic>>>((ref) {
-  return ref.read(firestoreProvider).collection('tests');
+  return ref.read(_firestoreProvider).collection('tests');
 });
 
 final testStreamProvider = StreamProvider((ref) {
@@ -35,11 +35,16 @@ final testStreamProvider = StreamProvider((ref) {
 });
 
 class FirestoreProviders {
-  Provider<CollectionReference<User>> userCollectionRefProvider() {
+  FirestoreProviders._();
+
+  static Provider<FirebaseFirestore> firestoreProvider() {
+    return _firestoreProvider;
+  }
+  static Provider<CollectionReference<User>> userCollectionRefProvider() {
     return _userCollectionRefProvider;
   }
 
-  Provider<CollectionReference<Question>> questionCollectionRefProvider() {
+  static Provider<CollectionReference<Question>> questionCollectionRefProvider() {
     return _questionCollectionRefProvider;
   }
 }
