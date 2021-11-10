@@ -1,8 +1,12 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:qomalin_app/models/entities/question.dart';
 import 'package:qomalin_app/providers/auth.dart';
 import 'package:qomalin_app/providers/firestore.dart';
+import 'package:qomalin_app/providers/location.dart';
+import 'package:qomalin_app/providers/questions.dart';
 import 'package:qomalin_app/router.dart';
 
 void main() async {
@@ -59,54 +63,114 @@ class MyHomePage extends ConsumerStatefulWidget {
 }
 
 class _MyHomePageState extends ConsumerState<MyHomePage> {
-  int _counter = 0;
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
-    final map = ref.watch(testStreamProvider).value;
-    final tests = map.docs;
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
+
     return Scaffold(
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
-      body: ListView.builder(itemBuilder: (BuildContext context, int index) {
-        return ListTile(
-          title: Text(tests[index]['title']),
-        );
-      }, itemCount: tests.length)
+      body: NearQuestionsExamplePage()
       ,
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
+        onPressed: () async {
           final uid = ref.read(authNotifierProvider)?.fireAuthUser?.uid;
-          ref.read(testsProvider).add({
-            'title': 'hogehoeg',
-            'text': 'bodypiyopiyo',
-            'user_id': uid,
-          });
+          final location = await Geolocator.getLastKnownPosition();
+          final doc = ref.read(FirestoreProviders.userCollectionRefProvider()).doc(uid);
+          ref.read(FirestoreProviders.questionCollectionRefProvider()).add(
+            Question(
+              id: "", 
+              title: "piyo",
+              text: "aaaa", 
+              address: null, 
+              location: LocationPoint(latitude: location!.latitude, longitude: location.longitude),
+              user: doc,
+              userId: uid,
+              createdAt: DateTime.now(),
+              updatedAt: DateTime.now()
+            )
+          );
         },
         tooltip: 'Increment',
         child: Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
+  }
+}
+
+class NearQuestionsExamplePage extends ConsumerWidget {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return StreamBuilder<Position>(stream: Geolocator.getPositionStream(), builder: (context, snapshot) {
+      if(snapshot.hasError || !snapshot.hasData) {
+        print("error?:${snapshot.error}, ${snapshot.stackTrace}");
+        return Text("位置情報の取得に失敗しました");
+      }
+
+      return StreamBuilder<List<Question>>(
+        stream: ref.read(QuestionProviders.questionServiceProvider())
+          .nearQuestions(
+            radius: 300,
+            latitude: snapshot.data!.latitude,
+            longitude: snapshot.data!.longitude),
+        builder: (context, snapshot) {
+          final list = snapshot.data;
+          if(snapshot.hasError) {
+            print(snapshot.stackTrace);
+            return Text("error:${snapshot.stackTrace}");
+          }
+          if(!snapshot.hasData) {
+            return CircularProgressIndicator();
+          }
+          final geo = ref.read(geoFirestoreProvider);
+          return ListView.builder(
+            itemBuilder: (context, index) {
+              final item = list?[index];
+              return ListTile(
+                title: Text(item!.title),
+                subtitle: Text("geohash:${geo.point(
+                    latitude: item.location.latitude,
+                    longitude: item.location.longitude
+                ).hash}"),
+              );
+            },
+            itemCount: list!.length,
+          );
+        });
+    },);
+  }
+}
+
+class CurrentLocationExamplePage extends ConsumerWidget {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    ref.watch(locationPositionStreamProvider).when(
+      data: (data) {
+        print("location:$data");
+      },
+      error: (e, s, t){},
+      loading: (a){
+        print("location loading");
+      });
+
+    ref.watch(locationServiceStatusStreamProvider).when(
+        data: (data){
+          print("data$data");
+        },
+        error: (e, s, t) {
+          print("error:$e, $s, $t");
+        },
+        loading: (a){
+          print("loading");
+        }
+    );
+    return Column(children: [
+
+    ],);
   }
 }
 
