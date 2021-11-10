@@ -17,7 +17,7 @@ class FirebaseQuestionService extends QuestionService {
   FirebaseQuestionService(this.reader);
   @override
   Stream<List<Question>> nearQuestions({required double radius, required double latitude, required double longitude}) {
-    final collection = reader(firestoreProvider).collection("questions");
+    final collection = reader(FirestoreProviders.firestoreProvider()).collection("questions");
     final geo = reader(geoFirestoreProvider);
     return geo.collection(collectionRef: collection).within(
         center: GeoFirePoint(latitude, longitude),
