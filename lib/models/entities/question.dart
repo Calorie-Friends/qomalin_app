@@ -29,17 +29,22 @@ class Question {
 
   static Question fromDocument(DocumentSnapshot<Map<String, dynamic>> ds) {
     print("fromDocument:${ds.data()}");
-    final location = ds['location'] as GeoPoint;
+    return fromMap(ds.id, ds.data()!);
+  }
+
+  static Question fromMap(String id, Map<String, dynamic> ds) {
+    print("fromMap:$ds");
+    final location = ds['location']['geopoint'] as GeoPoint;
     return Question(
-      id: ds.id,
-      title: ds.get('title'),
-      text: ds.get('text'),
-      address: ds.get('address'),
-      user: (ds['user'] as DocumentReference).withUserConverter(),
-      userId: ds['user_id'],
-      location: LocationPoint(latitude: location.latitude, longitude: location.longitude),
-      createdAt: ds['created_at'].toDate(),
-      updatedAt: ds['updated_at'].toDate()
+        id: id,
+        title: ds['title'],
+        text: ds['text'],
+        address: ds['address'],
+        user: (ds['user'] as DocumentReference).withUserConverter(),
+        userId: ds['user_id'],
+        location: LocationPoint(latitude: location.latitude, longitude: location.longitude),
+        createdAt: ds['created_at'].toDate(),
+        updatedAt: ds['updated_at'].toDate()
     );
   }
 
@@ -51,7 +56,9 @@ class Question {
       'address': this.address,
       'location': geo.data,
       'created_at': Timestamp.fromDate(this.createdAt),
-      'updated_at': Timestamp.fromDate(this.updatedAt)
+      'updated_at': Timestamp.fromDate(this.updatedAt),
+      'user_id': this.userId,
+      'user': this.user
     };
   }
 
