@@ -47,6 +47,33 @@ class Question {
         updatedAt: ds['updated_at'].toDate());
   }
 
+  /// 新たに質問オブジェクトを作成するためのFactory
+  /// Firestoreには登録されないので別で登録処理を実行すること。
+  static Question newQuestion(FirebaseFirestore store, {
+    required String title,
+    required String text,
+    required String userId,
+    required double latitude,
+    required double longitude,
+  }) {
+    final userRef = store.collection("users").doc(userId).withUserConverter();
+    final now = DateTime.now();
+    return Question(
+      id: "",
+      title: title,
+      text: text,
+      address: null,
+      location: LocationPoint(
+        latitude: latitude,
+        longitude: longitude
+      ),
+      user: userRef,
+      userId: userId,
+      createdAt: DateTime.now(),
+      updatedAt: now
+    );
+  }
+
   Map<String, dynamic> toMap() {
     final geo = GeoFirePoint(this.location.latitude, this.location.longitude);
     return {
