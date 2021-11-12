@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:qomalin_app/ui/pages/account_page.dart';
@@ -13,17 +11,13 @@ import 'package:qomalin_app/ui/pages/notification_page.dart';
 class MainPage extends ConsumerStatefulWidget {
   const MainPage({Key? key}) : super(key: key);
 
-  static const String _title = 'Flutter Code Sample';
-
   @override
   ConsumerState<ConsumerStatefulWidget> createState() {
-
     return MainState();
-
   }
-
 }
-class MainState extends ConsumerState{
+
+class MainState extends ConsumerState {
   int currentIndex = 0;
   void onTabTapped(int index) {
     setState(() {
@@ -48,27 +42,14 @@ class MainState extends ConsumerState{
         selectedItemColor: Colors.red,
         unselectedItemColor: Colors.grey,
         items: [
-          BottomNavigationBarItem(
-            icon:Icon(Icons.home),
-            label: 'ホーム'
-          ),
-          BottomNavigationBarItem(
-              icon:Icon(Icons.map),
-              label: 'マップ'
-          ),
-          BottomNavigationBarItem(
-              icon:Icon(Icons.notifications),
-              label: '通知'
-          ),
-          BottomNavigationBarItem(
-              icon:Icon(Icons.person),
-              label: 'アカウント'
-          )
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'ホーム'),
+          BottomNavigationBarItem(icon: Icon(Icons.map), label: 'マップ'),
+          BottomNavigationBarItem(icon: Icon(Icons.notifications), label: '通知'),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'アカウント')
         ],
       ),
     );
   }
-
 }
 
 /// This is the stateful widget that the main application instantiates.
@@ -83,7 +64,7 @@ class MyStatefulWidget extends StatefulWidget {
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   int _selectedIndex = 0;
   static const TextStyle optionStyle =
-  TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
+      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   static const List<Widget> _widgetOptions = <Widget>[
     Text(
       'Index 0: Home',

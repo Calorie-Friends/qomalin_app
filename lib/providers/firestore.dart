@@ -9,24 +9,24 @@ final _firestoreProvider = Provider<FirebaseFirestore>((ref) {
   return FirebaseFirestore.instance;
 });
 
-
 final geoFirestoreProvider = Provider<Geoflutterfire>((ref) {
   return Geoflutterfire();
 });
 
-
-
-final _userCollectionRefProvider = Provider<CollectionReference<User>>((ref){
+final _userCollectionRefProvider = Provider<CollectionReference<User>>((ref) {
   return ref.read(_firestoreProvider).collection('users').withUserConverter();
 });
 
-final _questionCollectionRefProvider = Provider<CollectionReference<Question>>((ref) {
-  return ref.read(_firestoreProvider).collection('questions').withQuestionConverter();
+final _questionCollectionRefProvider =
+    Provider<CollectionReference<Question>>((ref) {
+  return ref
+      .read(_firestoreProvider)
+      .collection('questions')
+      .withQuestionConverter();
 });
 
-
-
-final testsProvider = Provider<CollectionReference<Map<String, dynamic>>>((ref) {
+final testsProvider =
+    Provider<CollectionReference<Map<String, dynamic>>>((ref) {
   return ref.read(_firestoreProvider).collection('tests');
 });
 
@@ -40,11 +40,13 @@ class FirestoreProviders {
   static Provider<FirebaseFirestore> firestoreProvider() {
     return _firestoreProvider;
   }
+
   static Provider<CollectionReference<User>> userCollectionRefProvider() {
     return _userCollectionRefProvider;
   }
 
-  static Provider<CollectionReference<Question>> questionCollectionRefProvider() {
+  static Provider<CollectionReference<Question>>
+      questionCollectionRefProvider() {
     return _questionCollectionRefProvider;
   }
 }

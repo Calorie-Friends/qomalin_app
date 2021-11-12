@@ -18,29 +18,24 @@ class _SignupState extends ConsumerState {
   Widget build(BuildContext context) {
     final authNotifier = ref.read(authNotifierProvider.notifier);
     return Scaffold(
-      appBar: AppBar(
-        title: Text("認証")
-      ),
-      body: Center(
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SignInButton(Buttons.Google, onPressed: () {
-                authNotifier.signInWithGoogle().then(
-                  (value) {
+        appBar: AppBar(title: Text("認証")),
+        body: Center(
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SignInButton(Buttons.Google, onPressed: () {
+                  authNotifier.signInWithGoogle().then((value) {
                     GoRouter.of(context).push('/');
-                  })
-                  .onError((e, st) {
+                  }).onError((e, st) {
                     print("error e:$e, st:$st");
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("認証に失敗しました")));
+                    ScaffoldMessenger.of(context)
+                        .showSnackBar(SnackBar(content: Text("認証に失敗しました")));
                   });
-              })
-            ],
+                })
+              ],
+            ),
           ),
-        ),
-      )
-    );
+        ));
   }
-
 }

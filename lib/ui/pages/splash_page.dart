@@ -8,9 +8,7 @@ class SplashPage extends StatelessWidget {
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            CircularProgressIndicator()
-          ],
+          children: [CircularProgressIndicator()],
         ),
       ),
     );

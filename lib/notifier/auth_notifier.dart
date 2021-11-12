@@ -1,13 +1,11 @@
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:qomalin_app/errors/auth_error.dart';
 import 'package:qomalin_app/providers/auth.dart';
 
-enum AuthStateType {
-  Authenticated, Unauthorized, Loading
-}
+enum AuthStateType { Authenticated, Unauthorized, Loading }
+
 class AuthState {
   final AuthStateType type;
   final User? fireAuthUser;
@@ -25,14 +23,13 @@ class AuthState {
   }
 }
 
-
 class AuthNotifier extends StateNotifier {
   final Reader reader;
-  AuthNotifier(this.reader) : super(AuthState.loading())  {
+  AuthNotifier(this.reader) : super(AuthState.loading()) {
     reader(firebaseAuthProvider).authStateChanges().listen((event) async {
-      if(event == null) {
+      if (event == null) {
         this.state = AuthState.unauthorized();
-      }else{
+      } else {
         this.state = AuthState.authenticated(event);
       }
     });
@@ -46,18 +43,17 @@ class AuthNotifier extends StateNotifier {
       if (googleAuth == null) {
         throw AuthFailedException();
       }
-      final cr = GoogleAuthProvider.credential(idToken: googleAuth.idToken, accessToken: googleAuth.accessToken);
+      final cr = GoogleAuthProvider.credential(
+          idToken: googleAuth.idToken, accessToken: googleAuth.accessToken);
       final uc = await FirebaseAuth.instance.signInWithCredential(cr);
-      if(uc.user == null) {
+      if (uc.user == null) {
         this.state = AuthState.unauthorized();
-      }else{
+      } else {
         this.state = AuthState.authenticated(uc.user!);
       }
-
     } on FirebaseAuthException {
       this.state = AuthState.unauthorized();
       throw AuthFailedException();
     }
-
   }
 }

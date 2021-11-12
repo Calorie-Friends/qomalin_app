@@ -15,17 +15,16 @@ class Question {
   final DocumentReference<User> user;
   final DateTime createdAt;
   final DateTime updatedAt;
-  Question({
-    required this.id,
-    required this.title,
-    required this.text,
-    required this.address,
-    required this.location,
-    required this.user,
-    required this.userId,
-    required this.createdAt,
-    required this.updatedAt
-  });
+  Question(
+      {required this.id,
+      required this.title,
+      required this.text,
+      required this.address,
+      required this.location,
+      required this.user,
+      required this.userId,
+      required this.createdAt,
+      required this.updatedAt});
 
   static Question fromDocument(DocumentSnapshot<Map<String, dynamic>> ds) {
     print("fromDocument:${ds.data()}");
@@ -42,10 +41,10 @@ class Question {
         address: ds['address'],
         user: (ds['user'] as DocumentReference).withUserConverter(),
         userId: ds['user_id'],
-        location: LocationPoint(latitude: location.latitude, longitude: location.longitude),
+        location: LocationPoint(
+            latitude: location.latitude, longitude: location.longitude),
         createdAt: ds['created_at'].toDate(),
-        updatedAt: ds['updated_at'].toDate()
-    );
+        updatedAt: ds['updated_at'].toDate());
   }
 
   Map<String, dynamic> toMap() {
@@ -61,20 +60,15 @@ class Question {
       'user': this.user
     };
   }
-
-
 }
 
 class LocationPoint {
   final double latitude;
   final double longitude;
   LocationPoint({required this.latitude, required this.longitude});
-
-
 }
 
-void hoge () {
+void hoge() {
   final geo = Geoflutterfire();
   geo.point(latitude: 134, longitude: 35);
-
 }
