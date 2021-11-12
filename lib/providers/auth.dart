@@ -10,6 +10,5 @@ final authStateChangesProvider = StreamProvider<User?>((ref) {
   return ref.read(firebaseAuthProvider).authStateChanges();
 });
 
-final authNotifierProvider = StateNotifierProvider((ref) => AuthNotifier(ref.read));
-
-
+final authNotifierProvider =
+    StateNotifierProvider((ref) => AuthNotifier(ref.read));
