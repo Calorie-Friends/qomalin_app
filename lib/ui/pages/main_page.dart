@@ -38,8 +38,9 @@ class MainState extends ConsumerState {
       body: tabs[currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         onTap: onTabTapped,
+        type: BottomNavigationBarType.fixed,
         currentIndex: currentIndex,
-        selectedItemColor: Colors.red,
+        selectedItemColor: Color.fromARGB(255, 0xFF, 0xB8, 0x00),//Color(int.parse("0xff${FFB800}")),
         unselectedItemColor: Colors.grey,
         items: [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'ホーム'),
