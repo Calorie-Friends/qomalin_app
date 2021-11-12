@@ -5,7 +5,8 @@ import 'package:qomalin_app/models/services/question_service.dart';
 final _questionServiceProvider =
     Provider((ref) => FirebaseQuestionService(ref.read));
 
-final _questionRepositoryProvider = Provider((ref) => FirebaseQuestionRepository(ref.read));
+final _questionRepositoryProvider =
+    Provider((ref) => FirebaseQuestionRepository(ref.read));
 
 class QuestionProviders {
   QuestionProviders._();

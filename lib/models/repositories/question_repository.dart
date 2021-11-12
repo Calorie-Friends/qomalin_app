@@ -6,15 +6,15 @@ abstract class QuestionRepository {
   Future<Question?> create(Question question);
 }
 
-class FirebaseQuestionRepository extends QuestionRepository{
+class FirebaseQuestionRepository extends QuestionRepository {
   Reader reader;
   FirebaseQuestionRepository(this.reader);
   @override
   Future<Question?> create(Question question) async {
-    final addResult = await reader(FirestoreProviders.questionCollectionRefProvider())
-      .add(question);
+    final addResult =
+        await reader(FirestoreProviders.questionCollectionRefProvider())
+            .add(question);
     final res = await addResult.get();
     return res.data();
-
   }
 }
