@@ -11,6 +11,7 @@ class Question {
   final String? text;
   final String? address;
   final LocationPoint location;
+  final List<String> imageUrls;
   final String userId;
   final DocumentReference<User> user;
   final DateTime createdAt;
@@ -24,7 +25,8 @@ class Question {
       required this.user,
       required this.userId,
       required this.createdAt,
-      required this.updatedAt});
+      required this.updatedAt,
+      required this.imageUrls});
 
   static Question fromDocument(DocumentSnapshot<Map<String, dynamic>> ds) {
     print("fromDocument:${ds.data()}");
@@ -40,11 +42,12 @@ class Question {
         text: ds['text'],
         address: ds['address'],
         user: (ds['user'] as DocumentReference).withUserConverter(),
-        userId: ds['user_id'],
+        userId: ds['userId'],
+        imageUrls: ds['imageUrls'] ?? [],
         location: LocationPoint(
             latitude: location.latitude, longitude: location.longitude),
-        createdAt: ds['created_at'].toDate(),
-        updatedAt: ds['updated_at'].toDate());
+        createdAt: ds['createdAt'].toDate(),
+        updatedAt: ds['updatedAt'].toDate());
   }
 
   /// 新たに質問オブジェクトを作成するためのFactory
@@ -56,6 +59,7 @@ class Question {
     required String userId,
     required double latitude,
     required double longitude,
+    required List<String> imageUrls
   }) {
     final userRef = store.collection("users").doc(userId).withUserConverter();
     final now = DateTime.now();
@@ -67,6 +71,7 @@ class Question {
         location: LocationPoint(latitude: latitude, longitude: longitude),
         user: userRef,
         userId: userId,
+        imageUrls: imageUrls,
         createdAt: DateTime.now(),
         updatedAt: now);
   }
@@ -78,9 +83,9 @@ class Question {
       'text': this.text,
       'address': this.address,
       'location': geo.data,
-      'created_at': Timestamp.fromDate(this.createdAt),
-      'updated_at': Timestamp.fromDate(this.updatedAt),
-      'user_id': this.userId,
+      'createdAt': Timestamp.fromDate(this.createdAt),
+      'updatedAt': Timestamp.fromDate(this.updatedAt),
+      'userId': this.userId,
       'user': this.user
     };
   }
