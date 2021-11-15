@@ -26,10 +26,10 @@ class MainState extends ConsumerState {
   }
 
   final List<Widget> tabs = [
-    HomePage(),
-    MapPage(),
-    NotificationPage(),
-    AccountPage()
+    const HomePage(),
+    const MapPage(),
+    const NotificationPage(),
+    const AccountPage()
   ];
 
   @override
@@ -40,9 +40,9 @@ class MainState extends ConsumerState {
         onTap: onTabTapped,
         type: BottomNavigationBarType.fixed,
         currentIndex: currentIndex,
-        selectedItemColor: Color.fromARGB(255, 0xFF, 0xB8, 0x00),//Color(int.parse("0xff${FFB800}")),
+        selectedItemColor: const Color.fromARGB(255, 0xFF, 0xB8, 0x00),//Color(int.parse("0xff${FFB800}")),
         unselectedItemColor: Colors.grey,
-        items: [
+        items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'ホーム'),
           BottomNavigationBarItem(icon: Icon(Icons.map), label: 'マップ'),
           BottomNavigationBarItem(icon: Icon(Icons.notifications), label: '通知'),

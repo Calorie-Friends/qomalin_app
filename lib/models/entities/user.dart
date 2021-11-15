@@ -12,6 +12,6 @@ class User {
   }
 
   Map<String, dynamic> toMap() {
-    return {'username': this.username, 'avatarIcon': this.avatarIcon};
+    return {'username': username, 'avatarIcon': avatarIcon};
   }
 }

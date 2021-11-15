@@ -16,7 +16,7 @@ class Question {
   final DocumentReference<User> user;
   final DateTime createdAt;
   final DateTime updatedAt;
-  Question(
+  const Question(
       {required this.id,
       required this.title,
       required this.text,
@@ -77,16 +77,16 @@ class Question {
   }
 
   Map<String, dynamic> toMap() {
-    final geo = GeoFirePoint(this.location.latitude, this.location.longitude);
+    final geo = GeoFirePoint(location.latitude, location.longitude);
     return {
-      'title': this.title,
-      'text': this.text,
-      'address': this.address,
+      'title': title,
+      'text': text,
+      'address': address,
       'location': geo.data,
-      'createdAt': Timestamp.fromDate(this.createdAt),
-      'updatedAt': Timestamp.fromDate(this.updatedAt),
-      'userId': this.userId,
-      'user': this.user
+      'createdAt': Timestamp.fromDate(createdAt),
+      'updatedAt': Timestamp.fromDate(updatedAt),
+      'userId': userId,
+      'user': user
     };
   }
 }
