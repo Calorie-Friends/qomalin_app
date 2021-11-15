@@ -88,6 +88,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                       longitude: location.longitude),
                   user: doc,
                   userId: uid,
+                  imageUrls: [],
                   createdAt: DateTime.now(),
                   updatedAt: DateTime.now()));
         },
