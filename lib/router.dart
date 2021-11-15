@@ -17,33 +17,33 @@ final router = Provider<GoRouter>((ref) {
         GoRoute(
             path: '/',
             pageBuilder: (context, state) {
-              return MaterialPage(key: state.pageKey, child: MainPage());
+              return MaterialPage(key: state.pageKey, child: const MainPage());
             }),
         GoRoute(
             path: '/signup',
             pageBuilder: (context, state) {
-              return MaterialPage(key: state.pageKey, child: SignupPage());
+              return MaterialPage(key: state.pageKey, child: const SignupPage());
             }),
-        if (authState.type == AuthStateType.Loading)
+        if (authState.type == AuthStateType.loading)
           GoRoute(
             path: '/splash',
             pageBuilder: (context, state) {
-              return MaterialPage(key: state.pageKey, child: SplashPage());
+              return MaterialPage(key: state.pageKey, child: const SplashPage());
             },
           )
       ],
       errorPageBuilder: (context, state) {
         print('error:${state.error}');
-        return MaterialPage(key: state.pageKey, child: ErrorPage());
+        return MaterialPage(key: state.pageKey, child: const ErrorPage());
       },
       redirect: (state) {
         final authState = ref.read(authNotifierProvider);
 
         if (state.subloc != '/signup' &&
-            authState.type == AuthStateType.Unauthorized) {
+            authState.type == AuthStateType.unauthorized) {
           return '/signup';
         } else if (state.subloc != '/splash' &&
-            authState.type == AuthStateType.Loading) {
+            authState.type == AuthStateType.loading) {
           return '/splash';
         }
         return null;
