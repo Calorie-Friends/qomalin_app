@@ -26,7 +26,23 @@ class App extends ConsumerWidget {
       routeInformationParser: r.routeInformationParser,
       routerDelegate: r.routerDelegate,
       title: 'Flutter Demo',
-      theme: ThemeData(primarySwatch: Colors.blue),
+      theme: ThemeData(
+        appBarTheme: const AppBarTheme(
+          color: Colors.white,
+          titleTextStyle: TextStyle(
+            color: Colors.black54,
+            fontSize: 22,
+            fontWeight: FontWeight.bold
+          ),
+          iconTheme: IconThemeData(
+            color: Colors.black54
+          )
+        ),
+        colorScheme: const ColorScheme.light(
+          secondary: Color.fromARGB(255, 0xFF, 0xB8, 0x00),
+          primary: Color.fromARGB(255, 0xFF, 0xB8, 0x00),
+
+        )),
     );
   }
 }
