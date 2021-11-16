@@ -30,8 +30,8 @@ class _SignupState extends ConsumerState {
                     GoRouter.of(context).push('/');
                   }).onError((e, st) {
                     print("error e:$e, st:$st");
-                    ScaffoldMessenger.of(context)
-                        .showSnackBar(const SnackBar(content: Text("認証に失敗しました")));
+                    ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text("認証に失敗しました")));
                   });
                 })
               ],

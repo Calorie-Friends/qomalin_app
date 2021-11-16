@@ -4,15 +4,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:qomalin_app/models/entities/question.dart';
 import 'package:qomalin_app/providers/firestore.dart';
 import 'package:qomalin_app/providers/questions.dart';
 
-class QuestionEditorPage extends ConsumerStatefulWidget{
+class QuestionEditorPage extends ConsumerStatefulWidget {
   const QuestionEditorPage({Key? key}) : super(key: key);
-
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() {
@@ -20,9 +18,7 @@ class QuestionEditorPage extends ConsumerStatefulWidget{
   }
 }
 
-
-
-class QuestionEditorState extends ConsumerState{
+class QuestionEditorState extends ConsumerState {
   final _titleEditingController = TextEditingController();
   final _textEditingController = TextEditingController();
   @override
@@ -45,8 +41,6 @@ class QuestionEditorState extends ConsumerState{
                   errorText: null,
                 ),
                 controller: _titleEditingController,
-
-
               ),
             ),
             //本文
@@ -64,7 +58,6 @@ class QuestionEditorState extends ConsumerState{
                 controller: _textEditingController,
               ),
             ),
-
           ],
         ),
       ),
@@ -84,18 +77,17 @@ class QuestionEditorState extends ConsumerState{
                 userId: uid,
                 latitude: location.latitude,
                 longitude: location.longitude,
-                imageUrls: []
-            );
+                imageUrls: []);
             //TODO: 作成状態を画面に表示する
             //FIXME: 例外処理をすること
-            final res = await ref.read(QuestionProviders.questionRepositoryProvider())
+            await ref
+                .read(QuestionProviders.questionRepositoryProvider())
                 .create(question);
             Navigator.of(context).pop();
           },
           child: const Text("保存"),
         ),
       ],
-
     );
   }
 }

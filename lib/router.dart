@@ -22,20 +22,22 @@ final router = Provider<GoRouter>((ref) {
             }),
         GoRoute(
             path: '/questions/edit',
-            pageBuilder: (context, state){
-              return MaterialPage(key: state.pageKey, child: QuestionEditorPage());
-            }
-        ),
+            pageBuilder: (context, state) {
+              return MaterialPage(
+                  key: state.pageKey, child: QuestionEditorPage());
+            }),
         GoRoute(
             path: '/signup',
             pageBuilder: (context, state) {
-              return MaterialPage(key: state.pageKey, child: const SignupPage());
+              return MaterialPage(
+                  key: state.pageKey, child: const SignupPage());
             }),
         if (authState.type == AuthStateType.loading)
           GoRoute(
             path: '/splash',
             pageBuilder: (context, state) {
-              return MaterialPage(key: state.pageKey, child: const SplashPage());
+              return MaterialPage(
+                  key: state.pageKey, child: const SplashPage());
             },
           )
       ],
