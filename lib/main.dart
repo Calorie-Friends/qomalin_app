@@ -27,22 +27,27 @@ class App extends ConsumerWidget {
       routerDelegate: r.routerDelegate,
       title: 'Flutter Demo',
       theme: ThemeData(
-          appBarTheme: const AppBarTheme(
-              color: Colors.white,
-              titleTextStyle: TextStyle(
-                  color: Colors.black54,
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold),
-              iconTheme: IconThemeData(color: Colors.black54)),
+        appBarTheme: const AppBarTheme(
+          color: Colors.white,
+          titleTextStyle: TextStyle(
+            color: Colors.black54,
+            fontSize: 20,
+            fontWeight: FontWeight.bold
+          ),
+          iconTheme: IconThemeData(
+            color: Colors.black54
+          )
+        ),
           tabBarTheme: const TabBarTheme(
               labelColor: Colors.black,
               indicator: UnderlineTabIndicator(
                   borderSide: BorderSide(
                       color: Color.fromARGB(255, 0xFF, 0xB8, 0x00)))),
-          colorScheme: const ColorScheme.light(
-            secondary: Color.fromARGB(255, 0xFF, 0xB8, 0x00),
-            primary: Color.fromARGB(255, 0xFF, 0xB8, 0x00),
-          )),
+        colorScheme: const ColorScheme.light(
+          secondary: Color.fromARGB(255, 0xFF, 0xB8, 0x00),
+          primary: Color.fromARGB(255, 0xFF, 0xB8, 0x00),
+
+        )),
     );
   }
 }
