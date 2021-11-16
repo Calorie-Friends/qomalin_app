@@ -61,8 +61,8 @@ class QuestionCard extends StatelessWidget {
               Text(text,maxLines: 2,),
               Row(
                 children: [
-                  /// FIXME: リップルが円形になるようにする。
                   InkWell(
+                    borderRadius: BorderRadius.circular(12),
                     onTap: onUserPressed,
                     child: CircleAvatar(
                       /// TODO: エラー発生時の画像をセットできるようにする。
