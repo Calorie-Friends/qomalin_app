@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:qomalin_app/providers/auth.dart';
 import 'package:qomalin_app/ui/pages/main_page.dart';
+import 'package:qomalin_app/ui/pages/question_editor_page.dart';
 import 'package:qomalin_app/ui/pages/signup_page.dart';
 import 'package:qomalin_app/ui/pages/splash_page.dart';
 
@@ -19,6 +20,12 @@ final router = Provider<GoRouter>((ref) {
             pageBuilder: (context, state) {
               return MaterialPage(key: state.pageKey, child: const MainPage());
             }),
+        GoRoute(
+            path: '/questions/edit',
+            pageBuilder: (context, state){
+              return MaterialPage(key: state.pageKey, child: QuestionEditorPage());
+            }
+        ),
         GoRoute(
             path: '/signup',
             pageBuilder: (context, state) {
