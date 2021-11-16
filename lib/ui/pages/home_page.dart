@@ -58,7 +58,7 @@ class QuestionCard extends StatelessWidget {
                   fontSize: 18,
                 ),
               ),
-              Text(text),
+              Text(text,maxLines: 2,),
               Row(
                 children: [
                   /// FIXME: リップルが円形になるようにする。
