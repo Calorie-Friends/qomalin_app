@@ -52,15 +52,13 @@ class Question {
 
   /// 新たに質問オブジェクトを作成するためのFactory
   /// Firestoreには登録されないので別で登録処理を実行すること。
-  static Question newQuestion(
-    FirebaseFirestore store, {
-    required String title,
-    required String text,
-    required String userId,
-    required double latitude,
-    required double longitude,
-    required List<String> imageUrls
-  }) {
+  static Question newQuestion(FirebaseFirestore store,
+      {required String title,
+      required String text,
+      required String userId,
+      required double latitude,
+      required double longitude,
+      required List<String> imageUrls}) {
     final userRef = store.collection("users").doc(userId).withUserConverter();
     final now = DateTime.now();
     return Question(
