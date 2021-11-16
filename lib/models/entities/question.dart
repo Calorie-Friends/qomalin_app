@@ -11,11 +11,12 @@ class Question {
   final String? text;
   final String? address;
   final LocationPoint location;
+  final List<String> imageUrls;
   final String userId;
   final DocumentReference<User> user;
   final DateTime createdAt;
   final DateTime updatedAt;
-  Question(
+  const Question(
       {required this.id,
       required this.title,
       required this.text,
@@ -24,7 +25,8 @@ class Question {
       required this.user,
       required this.userId,
       required this.createdAt,
-      required this.updatedAt});
+      required this.updatedAt,
+      required this.imageUrls});
 
   static Question fromDocument(DocumentSnapshot<Map<String, dynamic>> ds) {
     print("fromDocument:${ds.data()}");
@@ -40,24 +42,51 @@ class Question {
         text: ds['text'],
         address: ds['address'],
         user: (ds['user'] as DocumentReference).withUserConverter(),
-        userId: ds['user_id'],
+        userId: ds['userId'],
+        imageUrls: ds['imageUrls'] ?? [],
         location: LocationPoint(
             latitude: location.latitude, longitude: location.longitude),
-        createdAt: ds['created_at'].toDate(),
-        updatedAt: ds['updated_at'].toDate());
+        createdAt: ds['createdAt'].toDate(),
+        updatedAt: ds['updatedAt'].toDate());
+  }
+
+  /// 新たに質問オブジェクトを作成するためのFactory
+  /// Firestoreには登録されないので別で登録処理を実行すること。
+  static Question newQuestion(
+    FirebaseFirestore store, {
+    required String title,
+    required String text,
+    required String userId,
+    required double latitude,
+    required double longitude,
+    required List<String> imageUrls
+  }) {
+    final userRef = store.collection("users").doc(userId).withUserConverter();
+    final now = DateTime.now();
+    return Question(
+        id: "",
+        title: title,
+        text: text,
+        address: null,
+        location: LocationPoint(latitude: latitude, longitude: longitude),
+        user: userRef,
+        userId: userId,
+        imageUrls: imageUrls,
+        createdAt: DateTime.now(),
+        updatedAt: now);
   }
 
   Map<String, dynamic> toMap() {
-    final geo = GeoFirePoint(this.location.latitude, this.location.longitude);
+    final geo = GeoFirePoint(location.latitude, location.longitude);
     return {
-      'title': this.title,
-      'text': this.text,
-      'address': this.address,
+      'title': title,
+      'text': text,
+      'address': address,
       'location': geo.data,
-      'created_at': Timestamp.fromDate(this.createdAt),
-      'updated_at': Timestamp.fromDate(this.updatedAt),
-      'user_id': this.userId,
-      'user': this.user
+      'createdAt': Timestamp.fromDate(createdAt),
+      'updatedAt': Timestamp.fromDate(updatedAt),
+      'userId': userId,
+      'user': user
     };
   }
 }

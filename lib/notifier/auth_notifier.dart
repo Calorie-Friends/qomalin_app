@@ -4,7 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:qomalin_app/errors/auth_error.dart';
 import 'package:qomalin_app/providers/auth.dart';
 
-enum AuthStateType { Authenticated, Unauthorized, Loading }
+enum AuthStateType { authenticated, unauthorized, loading }
 
 class AuthState {
   final AuthStateType type;
@@ -12,14 +12,14 @@ class AuthState {
 
   AuthState({required this.type, required this.fireAuthUser});
   factory AuthState.loading() {
-    return AuthState(type: AuthStateType.Loading, fireAuthUser: null);
+    return AuthState(type: AuthStateType.loading, fireAuthUser: null);
   }
   factory AuthState.authenticated(User user) {
-    return AuthState(type: AuthStateType.Authenticated, fireAuthUser: user);
+    return AuthState(type: AuthStateType.authenticated, fireAuthUser: user);
   }
 
   factory AuthState.unauthorized() {
-    return AuthState(type: AuthStateType.Unauthorized, fireAuthUser: null);
+    return AuthState(type: AuthStateType.unauthorized, fireAuthUser: null);
   }
 }
 
@@ -28,9 +28,9 @@ class AuthNotifier extends StateNotifier {
   AuthNotifier(this.reader) : super(AuthState.loading()) {
     reader(firebaseAuthProvider).authStateChanges().listen((event) async {
       if (event == null) {
-        this.state = AuthState.unauthorized();
+        state = AuthState.unauthorized();
       } else {
-        this.state = AuthState.authenticated(event);
+        state = AuthState.authenticated(event);
       }
     });
   }
@@ -47,12 +47,12 @@ class AuthNotifier extends StateNotifier {
           idToken: googleAuth.idToken, accessToken: googleAuth.accessToken);
       final uc = await FirebaseAuth.instance.signInWithCredential(cr);
       if (uc.user == null) {
-        this.state = AuthState.unauthorized();
+        state = AuthState.unauthorized();
       } else {
-        this.state = AuthState.authenticated(uc.user!);
+        state = AuthState.authenticated(uc.user!);
       }
     } on FirebaseAuthException {
-      this.state = AuthState.unauthorized();
+      state = AuthState.unauthorized();
       throw AuthFailedException();
     }
   }

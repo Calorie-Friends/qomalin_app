@@ -11,10 +11,12 @@ import 'package:qomalin_app/router.dart';
 
 void main() async {
   await setupWhenBeforeRunApp();
-  runApp(ProviderScope(child: App()));
+  runApp(const ProviderScope(child: App()));
 }
 
 class App extends ConsumerWidget {
+  const App({Key? key}) : super(key: key);
+
   // This widget is the root of your application.
 
   @override
@@ -30,13 +32,15 @@ class App extends ConsumerWidget {
 }
 
 class ErrorPage extends StatelessWidget {
+  const ErrorPage({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("致命的なエラー"),
+        title: const Text("致命的なエラー"),
       ),
-      body: Center(
+      body: const Center(
         child: Text("致命的なエラーが発生しました"),
       ),
     );
@@ -44,7 +48,7 @@ class ErrorPage extends StatelessWidget {
 }
 
 class MyHomePage extends ConsumerStatefulWidget {
-  MyHomePage({Key? key, required this.title}) : super(key: key);
+  const MyHomePage({Key? key, required this.title}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -70,7 +74,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
-      body: NearQuestionsExamplePage(),
+      body: const NearQuestionsExamplePage(),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           final uid = ref.read(authNotifierProvider)?.fireAuthUser?.uid;
@@ -88,17 +92,20 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                       longitude: location.longitude),
                   user: doc,
                   userId: uid,
+                  imageUrls: const [],
                   createdAt: DateTime.now(),
                   updatedAt: DateTime.now()));
         },
         tooltip: 'Increment',
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
 
 class NearQuestionsExamplePage extends ConsumerWidget {
+  const NearQuestionsExamplePage({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return StreamBuilder<Position>(
@@ -106,7 +113,7 @@ class NearQuestionsExamplePage extends ConsumerWidget {
       builder: (context, snapshot) {
         if (snapshot.hasError || !snapshot.hasData) {
           print("error?:${snapshot.error}, ${snapshot.stackTrace}");
-          return Text("位置情報の取得に失敗しました");
+          return const Text("位置情報の取得に失敗しました");
         }
 
         return StreamBuilder<List<Question>>(
@@ -123,7 +130,7 @@ class NearQuestionsExamplePage extends ConsumerWidget {
                 return Text("error:${snapshot.stackTrace}");
               }
               if (!snapshot.hasData) {
-                return CircularProgressIndicator();
+                return const CircularProgressIndicator();
               }
               final geo = ref.read(geoFirestoreProvider);
               return ListView.builder(
@@ -144,6 +151,8 @@ class NearQuestionsExamplePage extends ConsumerWidget {
 }
 
 class CurrentLocationExamplePage extends ConsumerWidget {
+  const CurrentLocationExamplePage({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     ref.watch(locationPositionStreamProvider).when(
@@ -163,7 +172,7 @@ class CurrentLocationExamplePage extends ConsumerWidget {
       print("loading");
     });
     return Column(
-      children: [],
+      children: const [],
     );
   }
 }
