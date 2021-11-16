@@ -38,6 +38,12 @@ class App extends ConsumerWidget {
             color: Colors.black54
           )
         ),
+        tabBarTheme: const TabBarTheme(
+          labelColor: Colors.black,
+          indicator: UnderlineTabIndicator(
+            borderSide: BorderSide(color: Color.fromARGB(255, 0xFF, 0xB8, 0x00))
+          )
+        ),
         colorScheme: const ColorScheme.light(
           secondary: Color.fromARGB(255, 0xFF, 0xB8, 0x00),
           primary: Color.fromARGB(255, 0xFF, 0xB8, 0x00),

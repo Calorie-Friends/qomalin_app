@@ -14,11 +14,24 @@ class HomePage extends StatelessWidget {
   }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('ホーム'),
+          bottom: const TabBar(
+            tabs: <Widget>[
+              Tab(text: '近く'),
+              Tab(text: '最近'),
+            ]
+          ),
+        ),
         body: ListView(
-      padding: const EdgeInsets.all(16),
-      children: [QuestionCard(title: '自販機が使えないです。',text: '自販機が使えないので助けてください！',avatarIcon: 'https://avatars.githubusercontent.com/u/65577595?v=4',username: 'tak2355',onQuestionPressed: onQuestionPressed,onUserPressed: onUserPressed,)],
-    ));
+          padding: const EdgeInsets.all(16),
+          children: [QuestionCard(title: '自販機が使えないです。',text: '自販機が使えないので助けてください！',avatarIcon: 'https://avatars.githubusercontent.com/u/65577595?v=4',username: 'tak2355',onQuestionPressed: onQuestionPressed,onUserPressed: onUserPressed,)],
+        )
+      )
+    );
   }
 }
 
