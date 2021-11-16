@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'dart:developer';
-import 'dart:math' as math;
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:qomalin_app/models/services/question_service.dart';
 /*
 class MapPage extends StatelessWidget {
   const MapPage({Key? key}) : super(key: key);
@@ -68,37 +68,8 @@ class MapState extends ConsumerState {
         onCameraIdle: () async {
           final ct = await _controller.future;
           final visibleRegion = await ct.getVisibleRegion();
-          log("onCameraIdle region:$visibleRegion");
-          // longitude=経度 -180 ~ 0 0 ~ 180
-          // latitude=緯度-90 ~ 0 0 ~ 90
-          // こうなる時があるLatLngBounds(LatLng(13.158565719803462, 170.82272831350565), LatLng(35.645481152002795, -175.55858977138996))
-          // 日付変更線の時や北極点・南極点の時は別途対処が必要
-
-          // 地球は円形のためそのまま愚直に差分を求めてしまうと360度分のデータを取得してしまう可能性がある
-          // そのため179と-179のデータを取得する時は179..180 && -179..180の範囲で取得するようにする。
-          final longitudeMax = math.max(visibleRegion.northeast.longitude, visibleRegion.southwest.longitude);
-          final longitudeMin = math.min(visibleRegion.northeast.longitude, visibleRegion.southwest.longitude);
-          final longitudeDiff = longitudeMax - longitudeMin;
-
-
-          final latitudeMax = math.max(visibleRegion.northeast.latitude, visibleRegion.southwest.latitude);
-          final latitudeMin = math.min(visibleRegion.northeast.latitude, visibleRegion.southwest.latitude);
-          final latitudeDiff = latitudeMax - latitudeMin;
-          final List<List<double>> longitudeRange;
-          if(longitudeDiff > 180) {
-            longitudeRange = [[0, latitudeMin], [latitudeMax, 180]];
-          }else{
-            longitudeRange = [[longitudeMin, longitudeMax]];
-          }
-
-          final List<List<double>> latitudeRange;
-          // latitudeの差分が90を超えている場合は北極点、南極点を跨いでいる可能性がある。
-          if(latitudeDiff > 90) {
-            latitudeRange = [[0, longitudeMin], [longitudeMax, 180]];
-          }else{
-            latitudeRange = [[latitudeMin, latitudeMax]];
-          }
-          log("検索範囲 longitude:$longitudeRange, latitude:$latitudeRange");
+          final latLngRange = LatLngRange.fromGoogleMapLatLngRegion(visibleRegion);
+          log("検索範囲 longitude:${latLngRange.longitudeRange}, latitude:${latLngRange.latitudeRange}");
         },
 
 
