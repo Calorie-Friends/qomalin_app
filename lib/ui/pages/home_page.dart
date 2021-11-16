@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 
 class HomePage extends StatelessWidget {
@@ -16,9 +17,16 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         body: ListView(
-      padding: const EdgeInsets.all(16),
-      children: [QuestionCard(title: '自販機が使えないです。',text: '自販機が使えないので助けてください！',avatarIcon: 'https://avatars.githubusercontent.com/u/65577595?v=4',username: 'tak2355',onQuestionPressed: onQuestionPressed,onUserPressed: onUserPressed,)],
-    ));
+        padding: const EdgeInsets.all(16),
+        children: [QuestionCard(title: '自販機が使えないです。',text: '自販機が使えないので助けてください！',avatarIcon: 'https://avatars.githubusercontent.com/u/65577595?v=4',username: 'tak2355',onQuestionPressed: onQuestionPressed,onUserPressed: onUserPressed,)],
+      ),
+        floatingActionButton: FloatingActionButton(
+          child: const Icon(Icons.add),
+          onPressed: (){
+            GoRouter.of(context).push( "/questions/edit");
+          },
+        )
+    );
   }
 }
 
