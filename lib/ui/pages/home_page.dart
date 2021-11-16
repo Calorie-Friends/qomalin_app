@@ -26,9 +26,11 @@ class HomePage extends StatelessWidget {
             ]
           ),
         ),
-        body: ListView(
-          padding: const EdgeInsets.all(16),
-          children: [QuestionCard(title: '自販機が使えないです。',text: '自販機が使えないので助けてください！',avatarIcon: 'https://avatars.githubusercontent.com/u/65577595?v=4',username: 'tak2355',onQuestionPressed: onQuestionPressed,onUserPressed: onUserPressed,)],
+        body: const TabBarView(
+          children: [
+            Center(child: Text('近く'),),
+            Center(child: Text('最近'),),
+          ],
         )
       )
     );
