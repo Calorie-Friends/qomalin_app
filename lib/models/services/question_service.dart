@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -52,7 +54,7 @@ abstract class QuestionService {
 
   Stream<List<Question>> latestQuestions({int limit = 20});
   
-  Future<List<Question>> findByLatLngRange(LatLngRange latLngRange);
+  Future<List<Question>> findByLatLngRange({required LatLng center, required double radius});
 }
 
 class FirebaseQuestionService extends QuestionService {
@@ -78,26 +80,26 @@ class FirebaseQuestionService extends QuestionService {
   @override
   Stream<List<Question>> latestQuestions({int limit = 20}) {
     return reader(FirestoreProviders.questionCollectionRefProvider())
-        .orderBy("created_at", descending: true)
+        .orderBy("createdAt", descending: true)
         .limit(limit)
         .snapshots()
         .map((event) => event.docs.map((e) => e.data()).toList());
   }
   
   @override
-  Future<List<Question>> findByLatLngRange(LatLngRange latLngRange) async {
-    var query = reader(FirestoreProviders.questionCollectionRefProvider())
-        .orderBy("created_at", descending: true)
-        .limit(100);
-    for (var element in latLngRange.latitudeRange) {
-      query = query.where("location.latitude", isGreaterThanOrEqualTo: element[0])
-          .where("location.latitude", isLessThanOrEqualTo: element[1]);
-    }
-    for (var element in latLngRange.longitudeRange) {
-      query = query.where("location.longitude", isGreaterThanOrEqualTo: element[0])
-          .where("location.longitude", isLessThanOrEqualTo: element[1]);
-    }
-    final res = await query.get();
-    return res.docs.map((e) => e.data()).toList();
+  Future<List<Question>> findByLatLngRange({required LatLng center, required double radius}) async {
+    log("center:$center, radius:$radius");
+    var query = reader(FirestoreProviders.firestoreProvider())
+      .collection("questions");
+    final stream = reader(geoFirestoreProvider).collection(collectionRef: query)
+      .within(
+          center: GeoFirePoint(center.latitude, center.longitude),
+          radius: radius, field: "location"
+    );
+    final res = await stream.first;
+    log("取得件数:${res.length}");
+    return res.map((e) => Question.fromDocument(e)).toList();
+
+
   }
 }

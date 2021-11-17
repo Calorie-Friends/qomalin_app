@@ -1,33 +1,11 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:qomalin_app/models/services/question_service.dart';
-/*
-class MapPage extends StatelessWidget {
-  const MapPage({Key? key}) : super(key: key);
+import 'package:qomalin_app/providers/questions.dart';
 
-  @override
-  Widget build(BuildContext context) {
-    return new Scaffold(
-      body: GoogleMap(
-        mapType: MapType.hybrid,
-        initialCameraPosition: _kGooglePlex,
-        onMapCreated: (GoogleMapController controller) {
-          _controller.complete(controller);
-        },
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: _goToTheLake,
-        label: Text('To the lake!'),
-        icon: Icon(Icons.directions_boat),
-      ),
-    );
-  }
-}*/
 class MapPage extends ConsumerStatefulWidget {
   const MapPage({Key? key}) : super(key: key);
 
@@ -40,6 +18,7 @@ class MapPage extends ConsumerStatefulWidget {
 class MapState extends ConsumerState {
   final Completer<GoogleMapController> _controller = Completer();
 
+  CameraPosition? cameraPosition;
   static const CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(37.42796133580664, -122.085749655962),
     zoom: 14.4746,
@@ -52,6 +31,10 @@ class MapState extends ConsumerState {
       zoom: 19.151926040649414);
   @override
   Widget build(BuildContext context) {
+    final state = ref.watch(QuestionProviders.questionMapNotifier());
+    _controller.future.then((value){
+
+    });
     return Scaffold(
       body: GoogleMap(
         mapType: MapType.normal,
@@ -59,8 +42,20 @@ class MapState extends ConsumerState {
         onMapCreated: (GoogleMapController controller) {
           _controller.complete(controller);
         },
+        markers: state.questions
+            .map((e) =>
+            Marker(
+              markerId: MarkerId(e.id),
+              position: LatLng(e.location.latitude, e.location.longitude),
+              onTap: () {
+
+              }
+            )
+        ).toSet(),
         onCameraMove: (position) {
           //log("カメラが動いた position:$position");
+          // NOTE: 現在のカメラの位置を記録したいだけなのでsetStateなどは呼び出さない。
+          cameraPosition = position;
         },
         onLongPress: (latLng) {
 
@@ -68,8 +63,16 @@ class MapState extends ConsumerState {
         onCameraIdle: () async {
           final ct = await _controller.future;
           final visibleRegion = await ct.getVisibleRegion();
-          final latLngRange = LatLngRange.fromGoogleMapLatLngRegion(visibleRegion);
-          log("検索範囲 longitude:${latLngRange.longitudeRange}, latitude:${latLngRange.latitudeRange}");
+
+          final pos = cameraPosition;
+          if(pos == null) {
+            return;
+          }
+          ref.read(QuestionProviders.questionMapNotifier().notifier).fetch(
+            LatLng(pos.target.latitude, pos.target.longitude),
+            visibleRegion
+          );
+
         },
 
 
