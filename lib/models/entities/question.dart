@@ -87,12 +87,50 @@ class Question {
       'user': user
     };
   }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Question &&
+          runtimeType == other.runtimeType &&
+          id == other.id &&
+          title == other.title &&
+          text == other.text &&
+          address == other.address &&
+          location == other.location &&
+          imageUrls == other.imageUrls &&
+          userId == other.userId &&
+          createdAt == other.createdAt &&
+          updatedAt == other.updatedAt;
+
+  @override
+  int get hashCode =>
+      id.hashCode ^
+      title.hashCode ^
+      text.hashCode ^
+      address.hashCode ^
+      location.hashCode ^
+      imageUrls.hashCode ^
+      userId.hashCode ^
+      createdAt.hashCode ^
+      updatedAt.hashCode;
 }
 
 class LocationPoint {
   final double latitude;
   final double longitude;
   LocationPoint({required this.latitude, required this.longitude});
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is LocationPoint &&
+          runtimeType == other.runtimeType &&
+          latitude == other.latitude &&
+          longitude == other.longitude;
+
+  @override
+  int get hashCode => latitude.hashCode ^ longitude.hashCode;
 }
 
 void hoge() {
