@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:qomalin_app/models/entities/question.dart';
@@ -21,6 +24,13 @@ class App extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    if(Platform.isAndroid) {
+      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
+          systemNavigationBarColor: const Color.fromARGB(255, 250, 250, 250),
+          systemNavigationBarIconBrightness: Brightness.dark,
+      ));
+    }
+
     final r = ref.watch(router);
     return MaterialApp.router(
       routeInformationParser: r.routeInformationParser,
