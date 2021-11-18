@@ -59,7 +59,7 @@ class MapState extends ConsumerState {
 
     //NOTE: cameraPosStateはautoDisposeなためwatchをしておかないと勝手に解放されてしまう。
 
-    final pageController = PageController(viewportFraction: 0.85);
+    final pageController = PageController(viewportFraction: 0.90);
     return Scaffold(
         body: Stack(
           children: [
