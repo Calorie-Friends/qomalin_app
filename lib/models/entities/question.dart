@@ -93,27 +93,11 @@ class Question {
       identical(this, other) ||
       other is Question &&
           runtimeType == other.runtimeType &&
-          id == other.id &&
-          title == other.title &&
-          text == other.text &&
-          address == other.address &&
-          location == other.location &&
-          imageUrls == other.imageUrls &&
-          userId == other.userId &&
-          createdAt == other.createdAt &&
-          updatedAt == other.updatedAt;
+          id == other.id;
 
   @override
   int get hashCode =>
-      id.hashCode ^
-      title.hashCode ^
-      text.hashCode ^
-      address.hashCode ^
-      location.hashCode ^
-      imageUrls.hashCode ^
-      userId.hashCode ^
-      createdAt.hashCode ^
-      updatedAt.hashCode;
+      id.hashCode;
 }
 
 class LocationPoint {
