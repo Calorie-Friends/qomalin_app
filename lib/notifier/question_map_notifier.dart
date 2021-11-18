@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:qomalin_app/models/entities/question.dart';
@@ -12,10 +13,23 @@ enum StateType {
 class QuestionMapState {
   final Set<Question> questions;
   final StateType type;
-  QuestionMapState({required this.questions, required this.type});
+  final double distance;
+  final double latitude;
+  final double longitude;
+  QuestionMapState({required this.questions, required this.type, this.distance = 0, this.latitude = 0, this.longitude = 0});
 
-  QuestionMapState copyWith({Set<Question>? q, StateType? t}) {
-    return QuestionMapState(questions: q ?? questions, type: t ?? type);
+  QuestionMapState copyWith({Set<Question>? q, StateType? t, double? distance, double? lat, double? log}) {
+    return QuestionMapState(questions: q ?? questions, type: t ?? type, distance: distance ?? this.distance, latitude: lat?? latitude, longitude: log ?? longitude);
+  }
+
+  Set<Question> distancedBy() {
+    final point = GeoFirePoint(latitude, longitude);
+    return questions.where((element) {
+      return point.distance(
+        lat: element.location.latitude,
+        lng: element.location.longitude
+      ) <= distance;
+    }).toSet();
   }
 }
 class QuestionMapNotifier extends StateNotifier<QuestionMapState> {
@@ -30,7 +44,13 @@ class QuestionMapNotifier extends StateNotifier<QuestionMapState> {
       .distance(lat: latLng.southwest.latitude, lng: latLng.southwest.longitude);
     final res = await reader(QuestionProviders.questionServiceProvider())
           .findByLatLngRange(center: center, radius: distance);
-      state = state.copyWith(q: ([...state.questions, ...res]).toSet(), t: StateType.fixed);
+      state = state.copyWith(
+        q: ([...state.questions, ...res]).toSet(),
+        t: StateType.fixed,
+        distance: distance,
+        lat: center.latitude,
+        log: center.longitude
+      );
 
     } catch (e, st) {
       log("エラー:$e, $st");

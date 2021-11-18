@@ -42,6 +42,9 @@ class MainState extends ConsumerState {
         currentIndex: currentIndex,
         selectedItemColor: const Color.fromARGB(255, 0xFF, 0xB8, 0x00), //Color(int.parse("0xff${FFB800}")),
         unselectedItemColor: Colors.grey,
+        unselectedFontSize: 10,
+        selectedFontSize: 10,
+        iconSize: 24,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'ホーム'),
           BottomNavigationBarItem(icon: Icon(Icons.location_on_outlined), label: 'マップ'),

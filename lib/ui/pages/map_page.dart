@@ -134,7 +134,7 @@ class QuestionMapBottomSheet extends ConsumerWidget {
 
     final questionMapNotifier = ref.watch(QuestionProviders.questionMapNotifier());
     final geo = ref.read(geoFirestoreProvider);
-    final questions = questionMapNotifier.questions.toList().sorted((a, b) {
+    final questions = questionMapNotifier.distancedBy().toList().sorted((a, b) {
       final aDistance = geo.point(latitude: a.location.latitude, longitude: a.location.longitude)
           .distance(lat: cameraPos.state?.target.latitude ?? 0, lng: cameraPos.state?.target.longitude ?? 0);
       final bDistance = geo.point(latitude: b.location.latitude, longitude: b.location.longitude)
@@ -155,7 +155,7 @@ class QuestionMapBottomSheet extends ConsumerWidget {
 
       builder: (context, state) {
 
-        return Container(
+        return SizedBox(
           height: MediaQuery.of(context).size.height,
           child: ListView.builder(
 
@@ -189,7 +189,6 @@ class QuestionMapBottomSheet extends ConsumerWidget {
         return Container(
           height: 56,
           width: double.infinity,
-          alignment: Alignment.center,
           padding: const EdgeInsets.all(16),
           child: Text(
             isLoading ? "周辺の情報を取得しています.." : "周辺の質問",
