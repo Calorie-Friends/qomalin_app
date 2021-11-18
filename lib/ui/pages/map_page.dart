@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:qomalin_app/models/entities/question.dart';
 import 'package:qomalin_app/providers/questions.dart';
 import 'package:qomalin_app/ui/pages/home_page.dart';
 import 'package:collection/collection.dart';
@@ -24,10 +23,8 @@ class MapPage extends ConsumerStatefulWidget {
   }
 }
 
-final _cameraPosState = StateProvider.autoDispose<CameraPosition?>((ref) => null);
-final _currentQuestionState = StateProvider.autoDispose<Question?>((ref) => null);
-
 class MapState extends ConsumerState {
+  CameraPosition? _cameraPos;
   final Completer<GoogleMapController> _controller = Completer();
 
   //CameraPosition? _cameraPosition;
@@ -45,7 +42,7 @@ class MapState extends ConsumerState {
           CameraUpdate.newCameraPosition(
               CameraPosition(
                   target: LatLng(value.latitude, value.longitude),
-                  zoom: ref.read(_cameraPosState).state?.zoom ?? 14
+                  zoom: _cameraPos?.zoom ?? 14
               )
           )
       );
@@ -61,7 +58,6 @@ class MapState extends ConsumerState {
     final questions = state.distancedBy().sorted((a, b) => a.createdAt.compareTo(b.createdAt)).toList();
 
     //NOTE: cameraPosStateはautoDisposeなためwatchをしておかないと勝手に解放されてしまう。
-    ref.watch(_cameraPosState);
 
     final pageController = PageController(viewportFraction: 0.85);
     return Scaffold(
@@ -83,13 +79,12 @@ class MapState extends ConsumerState {
                       if(index >= 0) {
                         pageController.jumpToPage(index);
                       }
-                      onQuestionMarkerTapped(e);
                     }
                   )
                 ).toSet(),
               onCameraMove: (position) {
                 // NOTE: 現在のカメラの位置を記録したいだけなのでsetStateなどは呼び出さない。
-                ref.read(_cameraPosState).state = position;
+                _cameraPos = position;
               },
               onLongPress: (latLng) {
 
@@ -99,7 +94,7 @@ class MapState extends ConsumerState {
                 final ct = await _controller.future;
                 final visibleRegion = await ct.getVisibleRegion();
 
-                final pos = ref.read(_cameraPosState).state;
+                final pos = _cameraPos;
                 log("pos:$pos");
                 if (pos == null) {
                   return;
@@ -140,9 +135,6 @@ class MapState extends ConsumerState {
     );
   }
 
-  Future onQuestionMarkerTapped(Question q) async {
-    log("質問が選択されました:${q.title}");
-    ref.read(_currentQuestionState).state = q;
-  }
+
 }
 
