@@ -6,7 +6,6 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:qomalin_app/models/entities/question.dart';
-import 'package:qomalin_app/providers/firestore.dart';
 import 'package:qomalin_app/providers/questions.dart';
 
 class QuestionEditorPage extends ConsumerStatefulWidget {
@@ -71,7 +70,6 @@ class QuestionEditorState extends ConsumerState {
             final location = await Geolocator.getCurrentPosition();
             log("作成準備:title:$title, text:$text, location.latitude:${location.latitude}, location.longitude:${location.longitude}");
             final question = Question.newQuestion(
-                ref.read(FirestoreProviders.firestoreProvider()),
                 title: title,
                 text: text,
                 userId: uid,

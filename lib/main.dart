@@ -100,9 +100,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
         onPressed: () async {
           final uid = ref.read(authNotifierProvider)?.fireAuthUser?.uid;
           final location = await Geolocator.getLastKnownPosition();
-          final doc =
-              ref.read(FirestoreProviders.userCollectionRefProvider()).doc(uid);
-          ref.read(FirestoreProviders.questionCollectionRefProvider()).add(
+          ref.read(QuestionProviders.questionRepositoryProvider()).create(
               Question(
                   id: "",
                   title: "piyo",
@@ -111,9 +109,9 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                   location: LocationPoint(
                       latitude: location!.latitude,
                       longitude: location.longitude),
-                  user: doc,
                   userId: uid,
                   imageUrls: const [],
+                  user: null,
                   createdAt: DateTime.now(),
                   updatedAt: DateTime.now()));
         },
