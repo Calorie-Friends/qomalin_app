@@ -57,8 +57,6 @@ class MapState extends ConsumerState {
 
     final questions = state.distancedBy().sorted((a, b) => a.createdAt.compareTo(b.createdAt)).toList();
 
-    //NOTE: cameraPosStateはautoDisposeなためwatchをしておかないと勝手に解放されてしまう。
-
     final pageController = PageController(viewportFraction: 0.90);
     return Scaffold(
         body: Stack(
