@@ -14,6 +14,10 @@ import 'package:qomalin_app/ui/pages/home_page.dart';
 import 'package:sliding_sheet/sliding_sheet.dart';
 import 'package:collection/collection.dart';
 
+enum BottomSheetContentType {
+  list, content
+}
+
 class MapPage extends ConsumerStatefulWidget {
   const MapPage({Key? key}) : super(key: key);
 
@@ -99,10 +103,7 @@ class MapState extends ConsumerState {
             myLocationButtonEnabled: true,
             myLocationEnabled: true,
           ),
-          QuestionMapBottomSheet(
-            nowLatitude: ref.read(_cameraPosState).state?.target.latitude,
-            nowLongitude: ref.read(_cameraPosState).state?.target.longitude,
-          )
+          const SafeArea(child: QuestionMapBottomSheet())
         ],
       )
     );
@@ -113,22 +114,21 @@ class MapState extends ConsumerState {
   }
 }
 
-final _sheetControllerProvider = Provider<SheetController>((ref) {
+final _sheetControllerProvider = Provider.autoDispose<SheetController>((ref) {
   return SheetController();
 });
 
 class QuestionMapBottomSheet extends ConsumerWidget {
-  final double? nowLatitude;
-  final double? nowLongitude;
+
   const QuestionMapBottomSheet({
-    Key? key,
-    required this.nowLatitude,
-    required this.nowLongitude,
+    Key? key
   }) : super(key: key);
 
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final sheetController = ref.watch(_sheetControllerProvider);
+
     final cameraPos = ref.watch(_cameraPosState);
     final double bottomSheetHeight = (MediaQuery.of(context).size.height);
 
@@ -140,13 +140,12 @@ class QuestionMapBottomSheet extends ConsumerWidget {
       final bDistance = geo.point(latitude: b.location.latitude, longitude: b.location.longitude)
           .distance(lat: cameraPos.state?.target.latitude ?? 0, lng: cameraPos.state?.target.longitude ?? 0);
       return aDistance.compareTo(bDistance);
-      //geo.point(latitude: element.location.latitude, longitude: element.location.longitude).distance(lat: 0, lng: 0)
     });
     final isLoading = questionMapNotifier.type == StateType.loading;
     return SlidingSheet(
       elevation: 8,
       cornerRadius: 16,
-      controller: ref.read(_sheetControllerProvider),
+      controller: sheetController,
       snapSpec: SnapSpec(
         snap: true,
         snappings: [60.0, 400.0, bottomSheetHeight - 55],
@@ -158,8 +157,9 @@ class QuestionMapBottomSheet extends ConsumerWidget {
 
         return Container(
           height: MediaQuery.of(context).size.height,
-          padding: const EdgeInsets.only(bottom: 55),
           child: ListView.builder(
+
+            padding: const EdgeInsets.only(bottom: 50),
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemBuilder: (context, index) {
