@@ -10,9 +10,6 @@ import 'package:qomalin_app/providers/questions.dart';
 import 'package:qomalin_app/ui/pages/home_page.dart';
 import 'package:collection/collection.dart';
 
-enum BottomSheetContentType {
-  list, content
-}
 
 class MapPage extends ConsumerStatefulWidget {
   const MapPage({Key? key}) : super(key: key);
