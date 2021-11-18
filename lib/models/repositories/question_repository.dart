@@ -13,8 +13,8 @@ class FirebaseQuestionRepository extends QuestionRepository {
   Future<Question?> create(Question question) async {
     final addResult =
         await reader(FirestoreProviders.questionCollectionRefProvider())
-            .add(question);
+            .add(QuestionFireDTO.fromEntity(reader(FirestoreProviders.firestoreProvider()), question));
     final res = await addResult.get();
-    return res.data();
+    return await res.data()?.toEntity();
   }
 }

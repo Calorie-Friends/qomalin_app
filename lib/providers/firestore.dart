@@ -18,7 +18,7 @@ final _userCollectionRefProvider = Provider<CollectionReference<User>>((ref) {
 });
 
 final _questionCollectionRefProvider =
-    Provider<CollectionReference<Question>>((ref) {
+    Provider<CollectionReference<QuestionFireDTO>>((ref) {
   return ref
       .read(_firestoreProvider)
       .collection('questions')
@@ -45,7 +45,7 @@ class FirestoreProviders {
     return _userCollectionRefProvider;
   }
 
-  static Provider<CollectionReference<Question>>
+  static Provider<CollectionReference<QuestionFireDTO>>
       questionCollectionRefProvider() {
     return _questionCollectionRefProvider;
   }
