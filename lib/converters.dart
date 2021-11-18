@@ -24,11 +24,11 @@ extension CollectionReferenceT<T> on CollectionReference {
     });
   }
 
-  CollectionReference<Question> withQuestionConverter() {
+  CollectionReference<QuestionFireDTO> withQuestionConverter() {
     return withConverter(
         fromFirestore: (DocumentSnapshot<Map<String, dynamic>> ds, _) {
-      return Question.fromDocument(ds);
-    }, toFirestore: (Question question, _) {
+      return QuestionFireDTO.fromDocument(ds);
+    }, toFirestore: (QuestionFireDTO question, _) {
       return question.toMap();
     });
   }
