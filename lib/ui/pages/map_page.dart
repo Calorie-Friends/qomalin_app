@@ -113,6 +113,10 @@ class MapState extends ConsumerState {
   }
 }
 
+final _sheetControllerProvider = Provider<SheetController>((ref) {
+  return SheetController();
+});
+
 class QuestionMapBottomSheet extends ConsumerWidget {
   final double? nowLatitude;
   final double? nowLongitude;
@@ -130,8 +134,6 @@ class QuestionMapBottomSheet extends ConsumerWidget {
 
     final questionMapNotifier = ref.watch(QuestionProviders.questionMapNotifier());
     final geo = ref.read(geoFirestoreProvider);
-    //final questions = questionMapNotifier.questions.toList()
-    //  .sortedBy((element) => geo.point(latitude: element.location.latitude, longitude: element.location.longitude).distance(lat: 0, lng: 0));
     final questions = questionMapNotifier.questions.toList().sorted((a, b) {
       final aDistance = geo.point(latitude: a.location.latitude, longitude: a.location.longitude)
           .distance(lat: cameraPos.state?.target.latitude ?? 0, lng: cameraPos.state?.target.longitude ?? 0);
@@ -144,43 +146,36 @@ class QuestionMapBottomSheet extends ConsumerWidget {
     return SlidingSheet(
       elevation: 8,
       cornerRadius: 16,
+      controller: ref.read(_sheetControllerProvider),
       snapSpec: SnapSpec(
-        // Enable snapping. This is true by default.
         snap: true,
-        // Set custom snapping points.
         snappings: [60.0, 400.0, bottomSheetHeight - 55],
-        // Define to what the snappings relate to. In this case,
-        // the total available space that the sheet can expand to.
         positioning: SnapPositioning.pixelOffset,
       ),
-      // The body widget will be displayed under the SlidingSheet
-      // and a parallax effect can be applied to it.
+
 
       builder: (context, state) {
-        // This is the content of the sheet that will get
-        // scrolled, if the content is bigger than the available
-        // height of the sheet.
+
         return Container(
           height: MediaQuery.of(context).size.height,
+          padding: const EdgeInsets.only(bottom: 55),
           child: ListView.builder(
             shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
+            physics: const NeverScrollableScrollPhysics(),
             itemBuilder: (context, index) {
 
-              //return Text(cameraPos.state?.toString() ?? "");
               final q = questions[index];
-
-              ///TODO: Kinoshita ユーザー名とタイトルを正しく表示できるようにする
               return QuestionCard(
-                title: q.id,
+                title: q.title,
                 text: q.text ?? "",
-                avatarIcon: "",
-                username:"hoge",
+                avatarIcon: q.user?.avatarIcon,
+                username: q.user?.username ?? "",
                 onQuestionPressed: () {
-
+                  // TODO: 質問詳細画面へ遷移できるようにする。
+                  ref.read(_sheetControllerProvider).collapse();
                 }, onUserPressed: () {
-
-              },
+                  ref.read(_sheetControllerProvider).collapse();
+                },
 
               );
             },
@@ -195,11 +190,11 @@ class QuestionMapBottomSheet extends ConsumerWidget {
           height: 56,
           width: double.infinity,
           alignment: Alignment.center,
-          padding: EdgeInsets.all(16),
+          padding: const EdgeInsets.all(16),
           child: Text(
             isLoading ? "周辺の情報を取得しています.." : "周辺の質問",
             //style: Theme.of(context).textTheme.body1.copyWith(color: Colors.white),
-            style: TextStyle(fontSize: 20),
+            style: const TextStyle(fontSize: 20),
           ),
         );
       },
