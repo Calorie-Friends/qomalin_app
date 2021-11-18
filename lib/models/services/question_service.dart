@@ -64,26 +64,33 @@ class FirebaseQuestionService extends QuestionService {
   Stream<List<Question>> nearQuestions(
       {required double radius,
       required double latitude,
-      required double longitude}) {
+      required double longitude}) async* {
     final collection =
         reader(FirestoreProviders.firestoreProvider()).collection("questions");
     final geo = reader(geoFirestoreProvider);
-    return geo
+    final dtoListEvents = geo
         .collection(collectionRef: collection)
         .within(
             center: GeoFirePoint(latitude, longitude),
             radius: radius,
             field: "location")
-        .map((event) => event.map((e) => Question.fromDocument(e)).toList());
+        .map((event) => event.map((e) => QuestionFireDTO.fromDocument(e)).toList());
+    await for(final dtoList in dtoListEvents) {
+      yield await Future.wait(dtoList.map((e) => e.toEntity()));
+    }
   }
 
   @override
-  Stream<List<Question>> latestQuestions({int limit = 20}) {
-    return reader(FirestoreProviders.questionCollectionRefProvider())
+  Stream<List<Question>> latestQuestions({int limit = 20}) async* {
+    final events = reader(FirestoreProviders.questionCollectionRefProvider())
         .orderBy("createdAt", descending: true)
         .limit(limit)
         .snapshots()
         .map((event) => event.docs.map((e) => e.data()).toList());
+
+    await for(final list in events) {
+      yield await Future.wait(list.map((e) => e.toEntity()).toList());
+    }
   }
   
   @override
@@ -98,8 +105,7 @@ class FirebaseQuestionService extends QuestionService {
     );
     final res = await stream.first;
     log("取得件数:${res.length}");
-    return res.map((e) => Question.fromDocument(e)).toList();
-
-
+    final futures = res.map((e) => QuestionFireDTO.fromDocument(e)).map((e) => e.toEntity()).toList();
+    return Future.wait(futures);
   }
 }
