@@ -20,6 +20,16 @@ class QuestionEditorPage extends ConsumerStatefulWidget {
 class QuestionEditorState extends ConsumerState {
   final _titleEditingController = TextEditingController();
   final _textEditingController = TextEditingController();
+  final double? latitude;
+  final double? longitude;
+
+
+  QuestionEditorState(
+    {Key? key,
+      this.latitude,
+      this.longitude
+    });
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -67,14 +77,24 @@ class QuestionEditorState extends ConsumerState {
             final uid = FirebaseAuth.instance.currentUser!.uid;
             final title = _titleEditingController.text;
             final text = _textEditingController.text;
-            final location = await Geolocator.getCurrentPosition();
-            log("作成準備:title:$title, text:$text, location.latitude:${location.latitude}, location.longitude:${location.longitude}");
+            final lat;
+            final lng;
+
+            if(latitude == null || longitude == null){
+              final location = await Geolocator.getCurrentPosition();
+              lat = location.latitude;
+              lng = location.longitude;
+            }else{
+              lat = latitude!;
+              lng = longitude!;
+            }
+            log("作成準備:title:$title, text:$text, location.latitude:${lat}, location.longitude:${lng}");
             final question = Question.newQuestion(
                 title: title,
                 text: text,
                 userId: uid,
-                latitude: location.latitude,
-                longitude: location.longitude,
+                latitude: lat,
+                longitude: lng,
                 imageUrls: []);
             //TODO: 作成状態を画面に表示する
             //FIXME: 例外処理をすること
