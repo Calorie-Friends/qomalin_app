@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
@@ -151,12 +153,12 @@ class QuestionFireDTO {
   }
 
   static QuestionFireDTO fromDocument(DocumentSnapshot<Map<String, dynamic>> ds) {
-    print("fromDocument:${ds.data()}");
+    log("fromDocument:${ds.data()}");
     return fromMap(ds.id, ds.data()!);
   }
 
   static QuestionFireDTO fromMap(String id, Map<String, dynamic> ds) {
-    print("fromMap:$ds");
+    log("fromMap:$ds");
     final location = ds['location']['geopoint'] as GeoPoint;
     return QuestionFireDTO(
         id: id,

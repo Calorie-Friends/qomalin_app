@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:qomalin_app/models/entities/question.dart';
@@ -77,8 +76,8 @@ class QuestionEditorState extends ConsumerState {
             final uid = FirebaseAuth.instance.currentUser!.uid;
             final title = _titleEditingController.text;
             final text = _textEditingController.text;
-            final lat;
-            final lng;
+            final double lat;
+            final double lng;
 
             if(latitude == null || longitude == null){
               final location = await Geolocator.getCurrentPosition();
@@ -88,7 +87,7 @@ class QuestionEditorState extends ConsumerState {
               lat = latitude!;
               lng = longitude!;
             }
-            log("作成準備:title:$title, text:$text, location.latitude:${lat}, location.longitude:${lng}");
+            log("作成準備:title:$title, text:$text, location.latitude:$lat, location.longitude:$lng");
             final question = Question.newQuestion(
                 title: title,
                 text: text,

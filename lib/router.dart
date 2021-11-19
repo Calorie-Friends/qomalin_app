@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -12,7 +14,7 @@ import 'notifier/auth_notifier.dart';
 
 final router = Provider<GoRouter>((ref) {
   final authState = ref.watch(authNotifierProvider);
-  print("更新されました${authState.type}");
+  log("更新されました${authState.type}");
   return GoRouter(
       routes: [
         GoRoute(
@@ -24,7 +26,7 @@ final router = Provider<GoRouter>((ref) {
             path: '/questions/edit',
             pageBuilder: (context, state) {
               return MaterialPage(
-                  key: state.pageKey, child: QuestionEditorPage());
+                  key: state.pageKey, child: const QuestionEditorPage());
             }),
         GoRoute(
             path: '/signup',
@@ -42,7 +44,7 @@ final router = Provider<GoRouter>((ref) {
           )
       ],
       errorPageBuilder: (context, state) {
-        print('error:${state.error}');
+        log('error:${state.error}');
         return MaterialPage(key: state.pageKey, child: const ErrorPage());
       },
       redirect: (state) {

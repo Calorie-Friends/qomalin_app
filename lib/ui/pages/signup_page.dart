@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/button_list.dart';
 import 'package:flutter_signin_button/button_view.dart';
@@ -29,7 +31,7 @@ class _SignupState extends ConsumerState {
                   authNotifier.signInWithGoogle().then((value) {
                     GoRouter.of(context).push('/');
                   }).onError((e, st) {
-                    print("error e:$e, st:$st");
+                    log("error e:$e, st:$st");
                     ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(content: Text("認証に失敗しました")));
                   });
