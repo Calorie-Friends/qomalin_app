@@ -7,7 +7,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:qomalin_app/providers/questions.dart';
-import 'package:qomalin_app/ui/pages/home_page.dart';
+import 'package:qomalin_app/ui/components/question_card.dart';
 import 'package:collection/collection.dart';
 
 
