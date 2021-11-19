@@ -3,16 +3,39 @@ import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:qomalin_app/ui/components/question_card.dart';
+import 'package:qomalin_app/models/entities/question.dart';
+import 'package:qomalin_app/models/entities/user.dart';
+import 'package:qomalin_app/ui/components/question_card_list.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
-  void onQuestionPressed() {
-    log('aaa');
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  void onQuestionPressed(Question question) {
+    log('questionが押されました。');
   }
 
-  void onUserPressed() {}
+  void onUserPressed(User user) {
+    log('userが押されました。');
+  }
+
+  List <Question> questions = [
+    Question(id: 'iefagwea456',
+        title: 'トイレを探しています',
+        text: 'トイレを探しています',
+        address: '日本　大阪',
+        location: LocationPoint(latitude: 0.00,longitude: 0.00),
+        user: User(id: 'aeag',username: 'agrgega',avatarIcon: ''),
+        userId: 'aifejfeagj;agja;',
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+        imageUrls: const ['adfiejfiow']
+    )
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -28,23 +51,8 @@ class HomePage extends StatelessWidget {
             ),
             body: TabBarView(
               children: [
-                ListView(
-                  padding: const EdgeInsets.all(16),
-                  children: [
-                    QuestionCard(
-                      title: '自販機が使えないです。',
-                      text: '自販機が使えないので助けてください！',
-                      avatarIcon:
-                          'https://avatars.githubusercontent.com/u/65577595?v=4',
-                      username: 'tak2355',
-                      onQuestionPressed: onQuestionPressed,
-                      onUserPressed: onUserPressed,
-                    )
-                  ],
-                ),
-                const Center(
-                  child: Text('最近'),
-                ),
+                QuestionCardList(onQuestionSelectedListener: onQuestionPressed, onQuestionUserPressedListener: onUserPressed, questions: questions),
+                QuestionCardList(onQuestionSelectedListener: onQuestionPressed, onQuestionUserPressedListener: onUserPressed, questions: questions)
               ],
             ),
             floatingActionButton: FloatingActionButton(

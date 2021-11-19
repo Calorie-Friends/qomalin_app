@@ -28,8 +28,9 @@ class QuestionCardList extends StatelessWidget{
             text: question.text ?? '',
             avatarIcon: question.user!.avatarIcon,
             username: question.user!.username,
-            onQuestionPressed: onQuestionSelectedListener(question),
-            onUserPressed: onQuestionUserPressedListener(question.user!));
+            onQuestionPressed: () {onQuestionSelectedListener(question); },
+            onUserPressed: () { onQuestionUserPressedListener(question.user!); }
+          );
       },
       itemCount: questions.length,
     );
