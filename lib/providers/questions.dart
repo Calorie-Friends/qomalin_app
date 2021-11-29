@@ -1,6 +1,7 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:qomalin_app/models/repositories/question_repository.dart';
 import 'package:qomalin_app/models/services/question_service.dart';
+import 'package:qomalin_app/notifier/near_questions_notifier.dart';
 import 'package:qomalin_app/notifier/question_map_notifier.dart';
 
 final _questionServiceProvider =
@@ -11,6 +12,7 @@ final _questionRepositoryProvider =
 
 final _questionMapNotifierProvider = StateNotifierProvider<QuestionMapNotifier, QuestionMapState>((ref) => QuestionMapNotifier(ref.read));
 
+final _nearQuestionsNotifierProvider = StateNotifierProvider<NearQuestionsNotifier, NearQuestionsState>((ref) => NearQuestionsNotifier(ref.read));
 class QuestionProviders {
   QuestionProviders._();
 
@@ -24,5 +26,9 @@ class QuestionProviders {
 
   static StateNotifierProvider<QuestionMapNotifier, QuestionMapState> questionMapNotifier() {
     return _questionMapNotifierProvider;
+  }
+
+  static StateNotifierProvider<NearQuestionsNotifier, NearQuestionsState> nearQuestionNotifierProvider() {
+    return _nearQuestionsNotifierProvider;
   }
 }

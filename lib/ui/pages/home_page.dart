@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:qomalin_app/models/entities/question.dart';
 import 'package:qomalin_app/models/entities/user.dart';
 import 'package:qomalin_app/ui/components/question_card_list.dart';
+import 'package:qomalin_app/ui/pages/near_question_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -51,7 +52,7 @@ class _HomePageState extends State<HomePage> {
             ),
             body: TabBarView(
               children: [
-                QuestionCardList(onQuestionSelectedListener: onQuestionPressed, onQuestionUserPressedListener: onUserPressed, questions: questions),
+                const NearQuestionPage(),
                 QuestionCardList(onQuestionSelectedListener: onQuestionPressed, onQuestionUserPressedListener: onUserPressed, questions: questions)
               ],
             ),

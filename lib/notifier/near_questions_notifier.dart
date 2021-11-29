@@ -1,5 +1,6 @@
 
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:geolocator/geolocator.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -36,7 +37,8 @@ class NearQuestionsState {
       questions: questions ?? this.questions,
       radius: radius ?? this.radius,
       latitude: latitude ?? this.latitude,
-      longitude: longitude ?? this.longitude
+      longitude: longitude ?? this.longitude,
+      type: type ?? this.type
     );
   }
 }
@@ -50,12 +52,14 @@ class NearQuestionsNotifier extends StateNotifier<NearQuestionsState> {
   );
   StreamSubscription<List<Question>>? _streamSubscription;
   Future fetch() async {
+
     state = state.copyWith(type: NearQuestionsStateType.loading);
     final pos = await GeolocatorPlatform.instance.getCurrentPosition();
     final distance = reader(geoFirestoreProvider)
       .point(latitude: pos.latitude, longitude: pos.longitude)
       .distance(lat: state.latitude ?? 0, lng: state.longitude ?? 0);
     if(!(distance > ((state.radius ?? defaultRadius) / 4))) {
+      state = state.copyWith(type: NearQuestionsStateType.fixed);
       return;
     }
     final stream = reader(QuestionProviders.questionServiceProvider())
@@ -72,7 +76,10 @@ class NearQuestionsNotifier extends StateNotifier<NearQuestionsState> {
         latitude: pos.latitude,
       );
     });
-    broadcastStream.first;
+    log("listen開始したらしい");
+    await broadcastStream.first;
+    log("state更新前");
+    state = state.copyWith(type: NearQuestionsStateType.fixed);
   }
 
   @override
