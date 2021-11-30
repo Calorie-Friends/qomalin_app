@@ -107,14 +107,7 @@ class ProfileEditorState extends ConsumerState{
       persistentFooterButtons: [
         ElevatedButton(
           onPressed: () async {
-            File file = File(_avatarIcon!.path);
-            FirebaseStorage storage = FirebaseStorage.instance;
-            try{
-              await storage.ref("hello").putFile(file);
-            }catch (e){
-              print(e);
-            }
-            print("${_usernameEditingController.text}");
+            //TODO: アバター画像をアップロードする
           },
           child: const Text("保存"),
         ),
