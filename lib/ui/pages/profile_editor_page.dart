@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class ProfileEditorPage extends ConsumerStatefulWidget{
   const ProfileEditorPage({Key? key}) : super(key: key);
@@ -44,6 +45,7 @@ class ProfileEditorState extends ConsumerState{
           padding: const EdgeInsets.all(16),
           child: Column(
             children: [
+              //プロフィール画像
               RawMaterialButton(
                 onPressed: _getAvatarIcon,
                 child: () {
@@ -71,6 +73,7 @@ class ProfileEditorState extends ConsumerState{
                   height: 50,
                 ),
               ),
+              //ユーザ名
               TextField(
                 keyboardType: TextInputType.multiline,
                 maxLines: null,
@@ -83,6 +86,7 @@ class ProfileEditorState extends ConsumerState{
                 ),
                 controller: _usernameEditingController,
               ),
+              //自己紹介
               TextField(
                 keyboardType: TextInputType.multiline,
                 maxLines: null,
@@ -99,10 +103,18 @@ class ProfileEditorState extends ConsumerState{
           ),
         ),
       ),
+      //保存ボタン
       persistentFooterButtons: [
         ElevatedButton(
           onPressed: () async {
-
+            File file = File(_avatarIcon!.path);
+            FirebaseStorage storage = FirebaseStorage.instance;
+            try{
+              await storage.ref("hello").putFile(file);
+            }catch (e){
+              print(e);
+            }
+            print("${_usernameEditingController.text}");
           },
           child: const Text("保存"),
         ),
