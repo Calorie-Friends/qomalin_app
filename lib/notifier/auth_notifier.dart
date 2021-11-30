@@ -23,7 +23,7 @@ class AuthState {
   }
 }
 
-class AuthNotifier extends StateNotifier {
+class AuthNotifier extends StateNotifier<AuthState> {
   final Reader reader;
   AuthNotifier(this.reader) : super(AuthState.loading()) {
     reader(firebaseAuthProvider).authStateChanges().listen((event) async {

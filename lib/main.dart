@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:firebase_core/firebase_core.dart';
@@ -108,7 +109,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
       body: const NearQuestionsExamplePage(),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          final uid = ref.read(authNotifierProvider)?.fireAuthUser?.uid;
+          final uid = ref.read(authNotifierProvider).fireAuthUser?.uid;
           final location = await Geolocator.getLastKnownPosition();
           ref.read(QuestionProviders.questionRepositoryProvider()).create(
               Question(
@@ -119,7 +120,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                   location: LocationPoint(
                       latitude: location!.latitude,
                       longitude: location.longitude),
-                  userId: uid,
+                  userId: uid!,
                   imageUrls: const [],
                   user: null,
                   createdAt: DateTime.now(),
@@ -141,7 +142,7 @@ class NearQuestionsExamplePage extends ConsumerWidget {
       stream: Geolocator.getPositionStream(),
       builder: (context, snapshot) {
         if (snapshot.hasError || !snapshot.hasData) {
-          print("error?:${snapshot.error}, ${snapshot.stackTrace}");
+          log("error?:${snapshot.error}, ${snapshot.stackTrace}");
           return const Text("位置情報の取得に失敗しました");
         }
 
@@ -155,7 +156,7 @@ class NearQuestionsExamplePage extends ConsumerWidget {
             builder: (context, snapshot) {
               final list = snapshot.data;
               if (snapshot.hasError) {
-                print(snapshot.stackTrace);
+                log(snapshot.stackTrace?.toString() ?? "");
                 return Text("error:${snapshot.stackTrace}");
               }
               if (!snapshot.hasData) {
@@ -186,19 +187,19 @@ class CurrentLocationExamplePage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     ref.watch(locationPositionStreamProvider).when(
         data: (data) {
-          print("location:$data");
+          log("location:$data");
         },
         error: (e, s, t) {},
         loading: (a) {
-          print("location loading");
+          log("location loading");
         });
 
     ref.watch(locationServiceStatusStreamProvider).when(data: (data) {
-      print("data$data");
+      log("data$data");
     }, error: (e, s, t) {
-      print("error:$e, $s, $t");
+      log("error:$e, $s, $t");
     }, loading: (a) {
-      print("loading");
+      log("loading");
     });
     return Column(
       children: const [],
