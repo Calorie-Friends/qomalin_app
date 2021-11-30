@@ -11,4 +11,4 @@ final authStateChangesProvider = StreamProvider<User?>((ref) {
 });
 
 final authNotifierProvider =
-    StateNotifierProvider((ref) => AuthNotifier(ref.read));
+    StateNotifierProvider<AuthNotifier, AuthState>((ref) => AuthNotifier(ref.read));
