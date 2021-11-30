@@ -44,16 +44,27 @@ class ProfileEditorState extends ConsumerState{
           padding: const EdgeInsets.all(16),
           child: Column(
             children: [
-
-              InkWell(
-                onTap: _getAvatarIcon,
+              RawMaterialButton(
+                onPressed: _getAvatarIcon,
                 child: () {
                   if(_avatarIcon == null) {
-                    return Icon(Icons.person_sharp, size: 100,);
+                    return const Icon(Icons.person_sharp, size: 150,);
                   }else{
-                    return Image.file(File(_avatarIcon!.path), width: 100, height:100, fit: BoxFit.cover,);
+                    return Container(
+                      width: 150,
+                      height: 150,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        image: DecorationImage(
+                          fit: BoxFit.fill,
+                          image: FileImage(File(_avatarIcon!.path)),
+                        )
+                      ),
+
+                    );
                   }
                 }(),
+                shape: CircleBorder(),
               ),
               SizedBox(
                 child: Container(
