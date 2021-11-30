@@ -9,11 +9,12 @@ class User {
   User({required this.id, required this.username, required this.avatarIcon, required this.description, descripstion});
 
   static User fromDocument(DocumentSnapshot<Map<String, dynamic>> ds) {
+    final data = ds.data() ?? {};
     return User(
         id: ds.id,
         username: ds.get('username'),
-        avatarIcon: ds.get("avatarIcon"),
-        description: ds.get("description"),
+        avatarIcon: data["avatarIcon"],
+        description: data["description"],
     );
   }
 
