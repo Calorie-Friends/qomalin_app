@@ -4,17 +4,20 @@ class User {
   final String id;
   final String username;
   final String? avatarIcon;
+  final String? description;
 
-  User({required this.id, required this.username, required this.avatarIcon});
+  User({required this.id, required this.username, required this.avatarIcon, required this.description, descripstion});
 
   static User fromDocument(DocumentSnapshot<Map<String, dynamic>> ds) {
     return User(
         id: ds.id,
         username: ds.get('username'),
-        avatarIcon: ds.get("avatarIcon"));
+        avatarIcon: ds.get("avatarIcon"),
+        description: ds.get("description"),
+    );
   }
 
   Map<String, dynamic> toMap() {
-    return {'username': username, 'avatarIcon': avatarIcon};
+    return {'username': username, 'avatarIcon': avatarIcon, 'description': description};
   }
 }
