@@ -11,7 +11,7 @@ class User {
     return User(
         id: ds.id,
         username: ds.get('username'),
-        avatarIcon: ds.get("avatarIcon"));
+        avatarIcon: ds['avatarIcon']);
   }
 
   Map<String, dynamic> toMap() {

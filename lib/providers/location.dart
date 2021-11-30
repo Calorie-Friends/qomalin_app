@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:geolocator/geolocator.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -6,7 +8,7 @@ final locationPositionStreamProvider =
   final stream = Geolocator.getPositionStream(
       distanceFilter: 1, desiredAccuracy: LocationAccuracy.high);
   await for (final v in stream) {
-    print("position:$v");
+    log("position:$v");
     yield v;
   }
 });
