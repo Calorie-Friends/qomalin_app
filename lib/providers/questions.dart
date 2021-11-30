@@ -12,7 +12,7 @@ final _questionRepositoryProvider =
 
 final _questionMapNotifierProvider = StateNotifierProvider<QuestionMapNotifier, QuestionMapState>((ref) => QuestionMapNotifier(ref.read));
 
-final _nearQuestionsNotifierProvider = StateNotifierProvider<NearQuestionsNotifier, NearQuestionsState>((ref) => NearQuestionsNotifier(ref.read));
+final _nearQuestionsNotifierProvider = StateNotifierProvider.autoDispose<NearQuestionsNotifier, NearQuestionsState>((ref) => NearQuestionsNotifier(ref.read));
 class QuestionProviders {
   QuestionProviders._();
 
@@ -28,7 +28,7 @@ class QuestionProviders {
     return _questionMapNotifierProvider;
   }
 
-  static StateNotifierProvider<NearQuestionsNotifier, NearQuestionsState> nearQuestionNotifierProvider() {
+  static AutoDisposeStateNotifierProvider<NearQuestionsNotifier, NearQuestionsState> nearQuestionNotifierProvider() {
     return _nearQuestionsNotifierProvider;
   }
 }
