@@ -109,7 +109,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
       body: const NearQuestionsExamplePage(),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          final uid = ref.read(authNotifierProvider)?.fireAuthUser?.uid;
+          final uid = ref.read(authNotifierProvider).fireAuthUser?.uid;
           final location = await Geolocator.getLastKnownPosition();
           ref.read(QuestionProviders.questionRepositoryProvider()).create(
               Question(
@@ -120,7 +120,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                   location: LocationPoint(
                       latitude: location!.latitude,
                       longitude: location.longitude),
-                  userId: uid,
+                  userId: uid!,
                   imageUrls: const [],
                   user: null,
                   createdAt: DateTime.now(),
