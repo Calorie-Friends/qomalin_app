@@ -13,9 +13,26 @@ class UserRepositoryImpl extends UserRepository{
   Reader reader;
   UserRepositoryImpl(this.reader);
   @override
-  Future<User> save(User user) {
-    // TODO: implement save
-    throw UnimplementedError();
+  Future<User> save(User user) async{
+    final username = await reader(FirestoreProviders.firestoreProvider()).collection('usernames')
+      .doc(user.username)
+      .get();
+    if(username.exists && username.get("userId") != user.id) {
+      throw UserNameAlreadyUsedException();
+    }
+    return await reader(FirestoreProviders.firestoreProvider()).runTransaction((transaction) async {
+
+      reader(FirestoreProviders.firestoreProvider())
+        .collection('usernames')
+        .doc(user.username)
+        .update({'userId': user.id });
+      await reader(FirestoreProviders.userCollectionRefProvider())
+          .doc(user.id).update(user.toMap());
+
+      return user;
+    });
+
+
   }
 
   @override
