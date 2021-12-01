@@ -8,12 +8,13 @@ import 'package:qomalin_app/models/entities/question.dart';
 import 'package:qomalin_app/providers/questions.dart';
 
 class QuestionEditorPage extends ConsumerStatefulWidget {
-  const QuestionEditorPage({Key? key}) : super(key: key);
+  final double? latitude;
+  final double? longitude;
+  const QuestionEditorPage({this.latitude, this.longitude ,Key? key}) : super(key: key);
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() {
-    return QuestionEditorState();
-  }
+  // ignore: no_logic_in_create_state
+  ConsumerState<ConsumerStatefulWidget> createState() => QuestionEditorState(latitude: latitude, longitude: longitude);
 }
 
 class QuestionEditorState extends ConsumerState {

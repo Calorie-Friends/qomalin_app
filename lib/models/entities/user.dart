@@ -8,10 +8,12 @@ class User {
   User({required this.id, required this.username, required this.avatarIcon});
 
   static User fromDocument(DocumentSnapshot<Map<String, dynamic>> ds) {
+    final data = ds.data() ?? {};
     return User(
         id: ds.id,
         username: ds.get('username'),
-        avatarIcon: ds['avatarIcon']);
+        avatarIcon: data['avatarIcon']
+    );
   }
 
   Map<String, dynamic> toMap() {
