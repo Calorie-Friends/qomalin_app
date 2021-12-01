@@ -67,7 +67,7 @@ class NotifierQuestionList extends ConsumerWidget {
     }
     return QuestionCardList(
       onQuestionSelectedListener: (q){
-        context.push('/questions/${q.id}');
+        context.push('/questions/${q.id}/show');
       }, onQuestionUserPressedListener: (u){}, questions: questions);
   }
 
