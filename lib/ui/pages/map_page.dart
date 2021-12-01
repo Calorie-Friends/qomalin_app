@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:qomalin_app/providers/questions.dart';
@@ -112,7 +113,16 @@ class MapState extends ConsumerState {
                   controller: pageController,
                   itemBuilder: (BuildContext context, i) {
                     final q = questions[i];
-                    return QuestionCard(title: q.title, text: q.text ?? "", avatarIcon: q.user?.avatarIcon, username: q.user?.username ?? "", onQuestionPressed: (){}, onUserPressed:(){});
+                    return QuestionCard(
+                        title: q.title,
+                        text: q.text ?? "",
+                        avatarIcon: q.user?.avatarIcon,
+                        username: q.user?.username ?? "",
+                        onQuestionPressed: (){
+                          GoRouter.of(context).push('/questions/${q.id}/show');
+                        },
+                        onUserPressed:(){}
+                    );
                   },
                   onPageChanged: (index) async {
                     final controller = await _controller.future;
