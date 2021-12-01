@@ -37,7 +37,7 @@ final router = Provider<GoRouter>((ref) {
             }
         ),
         GoRoute(
-            path: "/questions/:questionId",
+            path: "/questions/:questionId/show",
             name: 'questionDetail',
             pageBuilder: (context, state) {
               return MaterialPage(
