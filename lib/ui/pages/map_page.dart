@@ -83,7 +83,7 @@ class MapState extends ConsumerState {
                 _cameraPos = position;
               },
               onLongPress: (latLng) {
-
+                GoRouter.of(context).push("/questions/edit?lat=${latLng.latitude}&lng=${latLng.longitude}");
               },
               onCameraIdle: () async {
                 log("onCameraIdle");

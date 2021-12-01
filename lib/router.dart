@@ -28,7 +28,12 @@ final router = Provider<GoRouter>((ref) {
             path: '/questions/edit',
             pageBuilder: (context, state) {
               return MaterialPage(
-                  key: state.pageKey, child: const QuestionEditorPage());
+                  key: state.pageKey,
+                  child: QuestionEditorPage(
+                    latitude: double.tryParse(state.queryParams['lat'] ?? ''),
+                    longitude: double.tryParse(state.queryParams['lng'] ?? '')
+                  )
+              );
             }),
         GoRoute(
             path: "/questions/:questionId/answers/create",
