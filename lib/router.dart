@@ -38,7 +38,7 @@ final router = Provider<GoRouter>((ref) {
         GoRoute(
             path: "/questions/:questionId/answers/create",
             pageBuilder: (context, state) {
-              return MaterialPage(key: state.pageKey, child: const AnswerEditorPage());
+              return MaterialPage(key: state.pageKey, child: AnswerEditorPage(questionId: state.params['questionId']!,));
             }
         ),
         GoRoute(
