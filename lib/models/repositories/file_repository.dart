@@ -22,7 +22,17 @@ class FileRepositoryImpl extends FileRepository{
     if(uid == null) {
       throw UnauthorizedException();
     }
-    final task = await ref.child("$uid/${file.path}").putFile(file).whenComplete(() => null);
+    final now = DateTime.now();
+    final task = await ref.child("users/$uid/files/"
+        "${now.year}"
+        "${now.month}"
+        "${now.day}"
+        "${now.hour}"
+        "${now.minute}"
+        "${now.second}"
+        "${now.microsecond}"
+        "${file.path.split("/").last}"
+    ).putFile(file).whenComplete(() => null);
     if (task.state == TaskState.success) {
       return await task.ref.getDownloadURL();
     }
