@@ -4,7 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:qomalin_app/models/entities/user.dart';
+import 'package:qomalin_app/providers/auth.dart';
 import 'package:qomalin_app/providers/file.dart';
+import 'package:qomalin_app/providers/user.dart';
 
 class ProfileEditorPage extends ConsumerStatefulWidget{
   const ProfileEditorPage({Key? key}) : super(key: key);
@@ -107,9 +110,11 @@ class ProfileEditorState extends ConsumerState{
       persistentFooterButtons: [
         ElevatedButton(
           onPressed: () async {
-            //アバターアイコンの画像ファイルをアップロードした。
             final fileRepository = ref.read(FileProviders.fileRepositoryProvider());
-            fileRepository.upload(File(_avatarIcon!.path));
+            var avatarIconPath = await fileRepository.upload(File(_avatarIcon!.path));
+            final userRepository = ref.read(UserProviders.userRepository());
+            final uid = ref.read(authNotifierProvider).fireAuthUser?.uid;
+            userRepository.save(User(id: uid!, username: _usernameEditingController.text, avatarIcon: avatarIconPath, description: _descriptionEditingController.text));
           },
           child: const Text("保存"),
         ),
