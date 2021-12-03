@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+import 'package:qomalin_app/providers/file.dart';
 
 class ProfileEditorPage extends ConsumerStatefulWidget{
   const ProfileEditorPage({Key? key}) : super(key: key);
@@ -107,7 +107,9 @@ class ProfileEditorState extends ConsumerState{
       persistentFooterButtons: [
         ElevatedButton(
           onPressed: () async {
-            //TODO: アバター画像をアップロードする
+            //アバターアイコンの画像ファイルをアップロードした。
+            final fileRepository = ref.read(FileProviders.fileRepositoryProvider());
+            fileRepository.upload(File(_avatarIcon!.path));
           },
           child: const Text("保存"),
         ),
