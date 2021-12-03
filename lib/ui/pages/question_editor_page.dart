@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -31,6 +32,15 @@ final _textValidationMsg = StateProvider.autoDispose<String?>((ref) {
   return null;
 });
 
+class TmpImageFile {
+  final String? imageUrl;
+  final File? file;
+  TmpImageFile({
+    required this.imageUrl,
+    required this.file
+  });
+}
+
 final _titleEditingControllerProvider = Provider
     .autoDispose
     .family<TextEditingController, String?>((ref, initial) {
@@ -47,6 +57,13 @@ final _textEditingControllerProvider = Provider
     });
 
 final _isSending = StateProvider.autoDispose((ref) => false);
+
+final _images = StateProvider.autoDispose.family<List<TmpImageFile>, List<TmpImageFile>?>((ref, tmpFiles) {
+  if(tmpFiles == null) {
+    return [];
+  }
+  return tmpFiles;
+});
 
 class QuestionEditorPage extends ConsumerWidget {
   final double? latitude;
@@ -79,44 +96,40 @@ class QuestionEditorPage extends ConsumerWidget {
         title: const Text('こまりん作成'),
       ),
       body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
         child: Column(
           children: [
             //タイトル
-            Container(
-              padding: const EdgeInsets.all(16),
-              child: TextField(
-                decoration: InputDecoration(
-                  border: const OutlineInputBorder(),
-                  labelText: "タイトル入力",
-                  hintText: "必須",
-                  errorText: titleValidationErrorMsg,
-                  enabled: !isSending,
-                ),
-                onChanged: (text) {
-                  ref.read(_titleStateProvider.state).state = text;
-                },
-                controller: titleEditingController,
+            TextField(
+              decoration: InputDecoration(
+                border: const OutlineInputBorder(),
+                labelText: "タイトル入力",
+                hintText: "必須",
+                errorText: titleValidationErrorMsg,
+                enabled: !isSending,
               ),
+              onChanged: (text) {
+                ref.read(_titleStateProvider.state).state = text;
+              },
+              controller: titleEditingController,
             ),
+            const SizedBox(height: 16),
             //本文
-            Container(
-              padding: const EdgeInsets.all(16),
-              child: TextField(
-                keyboardType: TextInputType.multiline,
-                maxLines: null,
-                minLines: 5,
-                decoration: InputDecoration(
-                  border: const OutlineInputBorder(),
-                  labelText: "本文入力",
-                  hintText: "必須",
-                  errorText: textValidationErrorMsg,
-                  enabled: !isSending,
-                ),
-                controller: textEditingController,
-                onChanged: (text) {
-                  ref.read(_textStateProvider.state).state = text;
-                },
+            TextField(
+              keyboardType: TextInputType.multiline,
+              maxLines: null,
+              minLines: 5,
+              decoration: InputDecoration(
+                border: const OutlineInputBorder(),
+                labelText: "本文入力",
+                hintText: "必須",
+                errorText: textValidationErrorMsg,
+                enabled: !isSending,
               ),
+              controller: textEditingController,
+              onChanged: (text) {
+                ref.read(_textStateProvider.state).state = text;
+              },
             ),
           ],
         ),
