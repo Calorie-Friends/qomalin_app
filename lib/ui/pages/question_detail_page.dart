@@ -5,41 +5,54 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:qomalin_app/models/entities/question.dart';
 import 'package:qomalin_app/providers/questions.dart';
 
+final _questionFutureProvider = FutureProvider.autoDispose.family<Question, String>((ref, questionId) {
+  return ref.read(QuestionProviders.questionRepositoryProvider())
+      .find(questionId);
+});
+
 class QuestionDetailPage extends ConsumerWidget {
   final String questionId;
   const QuestionDetailPage({required this.questionId, Key? key})
       : super(key: key);
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("質問詳細"),
-      ),
-      body: FutureBuilder<Question>(
-        future: ref
-            .read(QuestionProviders.questionRepositoryProvider())
-            .find(questionId),
-        builder: (BuildContext context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          if (snapshot.hasError) {
-            return Container(
-                alignment: Alignment.center, child: const Text("取得失敗"));
-          }
-          return ListView(
-            children: [QuestionDetail(question: snapshot.requireData)],
-          );
-        },
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          GoRouter.of(context).push('/questions/$questionId/answers/create');
-        },
-        label: const Text('回答する'),
-        icon: const Icon(Icons.add),
-      ),
+
+    return ref.watch(_questionFutureProvider(questionId)).map(
+      data: (data) {
+        return Scaffold(
+          appBar: AppBar(
+            title: Text(data.value.title),
+          ),
+          body: ListView(
+            children: [QuestionDetail(question: data.value)],
+          ),
+          floatingActionButton: FloatingActionButton.extended(
+            onPressed: () {
+              GoRouter.of(context).push('/questions/$questionId/answers/create');
+            },
+            label: const Text('回答する'),
+            icon: const Icon(Icons.add),
+          ),
+        );
+      },
+      error: (state) {
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text("読み込み失敗"),
+          ),
+          body: Container(alignment: Alignment.center, child: const Text("取得失敗")),
+        );
+      },
+      loading: (e) {
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text("質問読み込み中")
+          ),
+          body: const Center(child: CircularProgressIndicator()),
+        );
+      }
     );
+
   }
 }
 

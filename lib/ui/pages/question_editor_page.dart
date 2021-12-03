@@ -17,6 +17,31 @@ class QuestionEditorPage extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => QuestionEditorState(latitude: latitude, longitude: longitude);
 }
 
+
+final _titleStateProvider = StateProvider.autoDispose<String>((ref) => '');
+
+final _titleValidationMsg = StateProvider.autoDispose<String?>((ref) {
+  final text = ref.watch(_titleStateProvider);
+  if(text.isEmpty || text.length < 2) {
+    return '2文字以上入力する必要があります。';
+  }
+  if(text.length > 20) {
+    return '20文字より多く入力できません。';
+  }
+  return null;
+});
+
+final _textStateProvider = StateProvider.autoDispose<String>((ref) => '');
+
+final _textValidationMsg = StateProvider.autoDispose<String?>((ref) {
+  final text = ref.watch(_textStateProvider);
+
+  if(text.length > 1000) {
+    return '1000文字より多く入力できません。';
+  }
+  return null;
+});
+
 class QuestionEditorState extends ConsumerState {
   final _titleEditingController = TextEditingController();
   final _textEditingController = TextEditingController();
@@ -27,11 +52,16 @@ class QuestionEditorState extends ConsumerState {
   QuestionEditorState(
     {Key? key,
       this.latitude,
-      this.longitude
+      this.longitude,
     });
+
 
   @override
   Widget build(BuildContext context) {
+
+    final titleValidationErrorMsg = ref.watch(_titleValidationMsg);
+    final textValidationErrorMsg = ref.watch(_textValidationMsg);
+    final enable = titleValidationErrorMsg == null || textValidationErrorMsg == null;
     return Scaffold(
       appBar: AppBar(
         title: const Text('こまりん作成'),
@@ -43,12 +73,15 @@ class QuestionEditorState extends ConsumerState {
             Container(
               padding: const EdgeInsets.all(16),
               child: TextField(
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
+                decoration: InputDecoration(
+                  border: const OutlineInputBorder(),
                   labelText: "タイトル入力",
                   hintText: "必須",
-                  errorText: null,
+                  errorText: titleValidationErrorMsg,
                 ),
+                onChanged: (text) {
+                  ref.read(_titleStateProvider.state).state = text;
+                },
                 controller: _titleEditingController,
               ),
             ),
@@ -59,12 +92,16 @@ class QuestionEditorState extends ConsumerState {
                 keyboardType: TextInputType.multiline,
                 maxLines: null,
                 minLines: 5,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
+                decoration: InputDecoration(
+                  border: const OutlineInputBorder(),
                   labelText: "本文入力",
                   hintText: "必須",
+                  errorText: textValidationErrorMsg
                 ),
                 controller: _textEditingController,
+                onChanged: (text) {
+                  ref.read(_textStateProvider.state).state = text;
+                },
               ),
             ),
           ],
@@ -72,8 +109,10 @@ class QuestionEditorState extends ConsumerState {
       ),
       persistentFooterButtons: [
         ElevatedButton(
-          onPressed: () async {
-            //TODO: 現在のユーザが未認証状態だった場合認証画面へ遷移するようにする。
+          onPressed: enable ? () async {
+            if(!enable) {
+              return;
+            }
             final uid = FirebaseAuth.instance.currentUser!.uid;
             final title = _titleEditingController.text;
             final text = _textEditingController.text;
@@ -102,7 +141,7 @@ class QuestionEditorState extends ConsumerState {
                 .read(QuestionProviders.questionRepositoryProvider())
                 .create(question);
             Navigator.of(context).pop();
-          },
+          } : null,
           child: const Text("保存"),
         ),
       ],
