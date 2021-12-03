@@ -7,17 +7,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:qomalin_app/models/entities/question.dart';
 import 'package:qomalin_app/providers/questions.dart';
 
-class QuestionEditorPage extends ConsumerStatefulWidget {
-  final double? latitude;
-  final double? longitude;
-  const QuestionEditorPage({this.latitude, this.longitude ,Key? key}) : super(key: key);
-
-  @override
-  // ignore: no_logic_in_create_state
-  ConsumerState<ConsumerStatefulWidget> createState() => QuestionEditorState(latitude: latitude, longitude: longitude);
-}
-
-
 final _titleStateProvider = StateProvider.autoDispose<String>((ref) => '');
 
 final _titleValidationMsg = StateProvider.autoDispose<String?>((ref) {
@@ -42,26 +31,49 @@ final _textValidationMsg = StateProvider.autoDispose<String?>((ref) {
   return null;
 });
 
-class QuestionEditorState extends ConsumerState {
-  final _titleEditingController = TextEditingController();
-  final _textEditingController = TextEditingController();
+final _titleEditingControllerProvider = Provider
+    .autoDispose
+    .family<TextEditingController, String?>((ref, initial) {
+        return TextEditingController.fromValue(
+            TextEditingValue(text: initial ?? '')
+        );
+    });
+final _textEditingControllerProvider = Provider
+    .autoDispose
+    .family<TextEditingController, String?>((ref, initial) {
+        return TextEditingController.fromValue(
+            TextEditingValue(text: initial ?? '')
+        );
+    });
+
+final _isSending = StateProvider.autoDispose((ref) => false);
+
+class QuestionEditorPage extends ConsumerWidget {
   final double? latitude;
   final double? longitude;
+  final String? questionId;
+  final String? title;
+  final String? text;
 
 
-  QuestionEditorState(
+  const QuestionEditorPage(
     {Key? key,
       this.latitude,
       this.longitude,
-    });
+      this.title,
+      this.text,
+      this.questionId
+    }) : super(key: key);
 
 
   @override
-  Widget build(BuildContext context) {
-
+  Widget build(BuildContext context, WidgetRef ref) {
+    final titleEditingController = ref.watch(_titleEditingControllerProvider(title));
+    final textEditingController = ref.watch(_textEditingControllerProvider(text));
     final titleValidationErrorMsg = ref.watch(_titleValidationMsg);
     final textValidationErrorMsg = ref.watch(_textValidationMsg);
-    final enable = titleValidationErrorMsg == null || textValidationErrorMsg == null;
+    final isSending = ref.watch(_isSending);
+    final enable = titleValidationErrorMsg == null && textValidationErrorMsg == null && !isSending;
     return Scaffold(
       appBar: AppBar(
         title: const Text('こまりん作成'),
@@ -78,11 +90,12 @@ class QuestionEditorState extends ConsumerState {
                   labelText: "タイトル入力",
                   hintText: "必須",
                   errorText: titleValidationErrorMsg,
+                  enabled: !isSending,
                 ),
                 onChanged: (text) {
                   ref.read(_titleStateProvider.state).state = text;
                 },
-                controller: _titleEditingController,
+                controller: titleEditingController,
               ),
             ),
             //本文
@@ -96,9 +109,10 @@ class QuestionEditorState extends ConsumerState {
                   border: const OutlineInputBorder(),
                   labelText: "本文入力",
                   hintText: "必須",
-                  errorText: textValidationErrorMsg
+                  errorText: textValidationErrorMsg,
+                  enabled: !isSending,
                 ),
-                controller: _textEditingController,
+                controller: textEditingController,
                 onChanged: (text) {
                   ref.read(_textStateProvider.state).state = text;
                 },
@@ -113,34 +127,41 @@ class QuestionEditorState extends ConsumerState {
             if(!enable) {
               return;
             }
+            ref.read(_isSending.state).state = true;
             final uid = FirebaseAuth.instance.currentUser!.uid;
-            final title = _titleEditingController.text;
-            final text = _textEditingController.text;
+            final title = titleEditingController.text;
+            final text = textEditingController.text;
             final double lat;
             final double lng;
 
-            if(latitude == null || longitude == null){
-              final location = await Geolocator.getCurrentPosition();
-              lat = location.latitude;
-              lng = location.longitude;
-            }else{
-              lat = latitude!;
-              lng = longitude!;
+            try {
+              if(latitude == null || longitude == null){
+                final location = await Geolocator.getCurrentPosition();
+                lat = location.latitude;
+                lng = location.longitude;
+              }else{
+                lat = latitude!;
+                lng = longitude!;
+              }
+              log("作成準備:title:$title, text:$text, location.latitude:$lat, location.longitude:$lng");
+              final question = Question.newQuestion(
+                  title: title,
+                  text: text,
+                  userId: uid,
+                  latitude: lat,
+                  longitude: lng,
+                  imageUrls: []);
+              await ref
+                  .read(QuestionProviders.questionRepositoryProvider())
+                  .create(question);
+              Navigator.of(context).pop();
+            } catch(e) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text("エラーが発生したため作成に失敗しました。")
+              ));
+            } finally {
+              ref.read(_isSending.state).state = false;
             }
-            log("作成準備:title:$title, text:$text, location.latitude:$lat, location.longitude:$lng");
-            final question = Question.newQuestion(
-                title: title,
-                text: text,
-                userId: uid,
-                latitude: lat,
-                longitude: lng,
-                imageUrls: []);
-            //TODO: 作成状態を画面に表示する
-            //FIXME: 例外処理をすること
-            await ref
-                .read(QuestionProviders.questionRepositoryProvider())
-                .create(question);
-            Navigator.of(context).pop();
           } : null,
           child: const Text("保存"),
         ),
