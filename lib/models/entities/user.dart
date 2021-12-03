@@ -13,8 +13,8 @@ class User {
     return User(
         id: ds.id,
         username: ds.get('username'),
-        avatarIcon: data["avatarIcon"],
         description: data["description"],
+        avatarIcon: data['avatarIcon']
     );
   }
 

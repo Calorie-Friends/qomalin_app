@@ -4,19 +4,15 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-class AnswerEditorPage extends ConsumerStatefulWidget{
-  const AnswerEditorPage({Key? key}) : super(key: key);
 
-  @override
-  ConsumerState<ConsumerStatefulWidget> createState() {
-    return AnswerEditorState();
-  }
-}
-
-class AnswerEditorState extends ConsumerState{
+class AnswerEditorPage extends ConsumerWidget{
+  final String questionId;
   final _textEditingController = TextEditingController();
+
+  AnswerEditorPage({ required this.questionId, Key? key}) : super(key: key);
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, ref) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('回答作成'),

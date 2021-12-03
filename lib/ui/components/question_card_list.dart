@@ -21,7 +21,8 @@ class QuestionCardList extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      itemBuilder:(BuildContext,int index){
+      padding: const EdgeInsets.all(4),
+      itemBuilder:(BuildContext context,int index){
         final question = questions[index];
         return QuestionCard(
             title: question.title,
