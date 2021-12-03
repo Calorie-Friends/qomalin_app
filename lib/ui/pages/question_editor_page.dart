@@ -31,8 +31,20 @@ final _textValidationMsg = StateProvider.autoDispose<String?>((ref) {
   return null;
 });
 
-final _titleEditingControllerProvider = Provider.autoDispose((ref) => TextEditingController());
-final _textEditingControllerProvider = Provider.autoDispose((ref) => TextEditingController());
+final _titleEditingControllerProvider = Provider
+    .autoDispose
+    .family<TextEditingController, String?>((ref, initial) {
+        return TextEditingController.fromValue(
+            TextEditingValue(text: initial ?? '')
+        );
+    });
+final _textEditingControllerProvider = Provider
+    .autoDispose
+    .family<TextEditingController, String?>((ref, initial) {
+        return TextEditingController.fromValue(
+            TextEditingValue(text: initial ?? '')
+        );
+    });
 
 class QuestionEditorPage extends ConsumerWidget {
   final double? latitude;
@@ -54,8 +66,8 @@ class QuestionEditorPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final titleEditingController = ref.watch(_titleEditingControllerProvider);
-    final textEditingController = ref.watch(_textEditingControllerProvider);
+    final titleEditingController = ref.watch(_titleEditingControllerProvider(title));
+    final textEditingController = ref.watch(_textEditingControllerProvider(text));
     final titleValidationErrorMsg = ref.watch(_titleValidationMsg);
     final textValidationErrorMsg = ref.watch(_textValidationMsg);
 
