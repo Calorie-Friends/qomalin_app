@@ -12,7 +12,7 @@ class NotificationPage extends StatelessWidget {
         //TODO: 以下はテスト用のボタンなので後で削除する
         child: TextButton(onPressed: (){
           GoRouter.of(context).push("/questions/hoge/answers/create");
-        }, child: Text("test")),
+        }, child: const Text("test")),
       ),
     );
   }

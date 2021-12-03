@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -32,7 +33,7 @@ class ProfileEditorState extends ConsumerState{
       if (pickedFile != null) {
         _avatarIcon = pickedFile;
       } else {
-        print('No image selected.');
+        log('No image selected.');
       }
     });
   }
@@ -69,7 +70,7 @@ class ProfileEditorState extends ConsumerState{
                     );
                   }
                 }(),
-                shape: CircleBorder(),
+                shape: const CircleBorder(),
               ),
               SizedBox(
                 child: Container(

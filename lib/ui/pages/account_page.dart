@@ -12,7 +12,7 @@ class AccountPage extends StatelessWidget {
         //TODO: 以下はテスト用のボタンなので後で削除する
         child: TextButton(onPressed: (){
           GoRouter.of(context).push("/me/profile/edit");
-        }, child: Text("test")),
+        }, child: const Text("test")),
       ),
     );
   }
