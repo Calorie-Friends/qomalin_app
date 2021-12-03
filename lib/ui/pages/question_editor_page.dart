@@ -46,6 +46,8 @@ final _textEditingControllerProvider = Provider
         );
     });
 
+final _isSending = StateProvider.autoDispose((ref) => false);
+
 class QuestionEditorPage extends ConsumerWidget {
   final double? latitude;
   final double? longitude;
@@ -70,8 +72,8 @@ class QuestionEditorPage extends ConsumerWidget {
     final textEditingController = ref.watch(_textEditingControllerProvider(text));
     final titleValidationErrorMsg = ref.watch(_titleValidationMsg);
     final textValidationErrorMsg = ref.watch(_textValidationMsg);
-
-    final enable = titleValidationErrorMsg == null || textValidationErrorMsg == null;
+    final isSending = ref.watch(_isSending);
+    final enable = titleValidationErrorMsg == null && textValidationErrorMsg == null && !isSending;
     return Scaffold(
       appBar: AppBar(
         title: const Text('こまりん作成'),
@@ -88,6 +90,7 @@ class QuestionEditorPage extends ConsumerWidget {
                   labelText: "タイトル入力",
                   hintText: "必須",
                   errorText: titleValidationErrorMsg,
+                  enabled: !isSending,
                 ),
                 onChanged: (text) {
                   ref.read(_titleStateProvider.state).state = text;
@@ -106,7 +109,8 @@ class QuestionEditorPage extends ConsumerWidget {
                   border: const OutlineInputBorder(),
                   labelText: "本文入力",
                   hintText: "必須",
-                  errorText: textValidationErrorMsg
+                  errorText: textValidationErrorMsg,
+                  enabled: !isSending,
                 ),
                 controller: textEditingController,
                 onChanged: (text) {
@@ -123,34 +127,41 @@ class QuestionEditorPage extends ConsumerWidget {
             if(!enable) {
               return;
             }
+            ref.read(_isSending.state).state = true;
             final uid = FirebaseAuth.instance.currentUser!.uid;
             final title = titleEditingController.text;
             final text = textEditingController.text;
             final double lat;
             final double lng;
 
-            if(latitude == null || longitude == null){
-              final location = await Geolocator.getCurrentPosition();
-              lat = location.latitude;
-              lng = location.longitude;
-            }else{
-              lat = latitude!;
-              lng = longitude!;
+            try {
+              if(latitude == null || longitude == null){
+                final location = await Geolocator.getCurrentPosition();
+                lat = location.latitude;
+                lng = location.longitude;
+              }else{
+                lat = latitude!;
+                lng = longitude!;
+              }
+              log("作成準備:title:$title, text:$text, location.latitude:$lat, location.longitude:$lng");
+              final question = Question.newQuestion(
+                  title: title,
+                  text: text,
+                  userId: uid,
+                  latitude: lat,
+                  longitude: lng,
+                  imageUrls: []);
+              await ref
+                  .read(QuestionProviders.questionRepositoryProvider())
+                  .create(question);
+              Navigator.of(context).pop();
+            } catch(e) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text("エラーが発生したため作成に失敗しました。")
+              ));
+            } finally {
+              ref.read(_isSending.state).state = false;
             }
-            log("作成準備:title:$title, text:$text, location.latitude:$lat, location.longitude:$lng");
-            final question = Question.newQuestion(
-                title: title,
-                text: text,
-                userId: uid,
-                latitude: lat,
-                longitude: lng,
-                imageUrls: []);
-            //TODO: 作成状態を画面に表示する
-            //FIXME: 例外処理をすること
-            await ref
-                .read(QuestionProviders.questionRepositoryProvider())
-                .create(question);
-            Navigator.of(context).pop();
           } : null,
           child: const Text("保存"),
         ),
