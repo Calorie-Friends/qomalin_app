@@ -167,7 +167,7 @@ class QuestionFireDTO {
         address: ds['address'],
         user: (ds['user'] as DocumentReference).withUserConverter(),
         userId: ds['userId'],
-        imageUrls: ds['imageUrls'] ?? [],
+        imageUrls: (ds['imageUrls'] as List<dynamic>?)?.map((el) => el.toString()).toList() ?? [],
         location: LocationPoint(
             latitude: location.latitude, longitude: location.longitude),
         createdAt: ds['createdAt'].toDate(),
