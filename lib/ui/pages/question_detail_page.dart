@@ -68,7 +68,18 @@ class QuestionDetail extends ConsumerWidget {
               question.text ?? '',
             ),
           if(question.imageUrls.isNotEmpty)
-            QuestionDetailImages(imageUrls: question.imageUrls),
+            QuestionDetailImages(
+              imageUrls: question.imageUrls,
+              onImageTapped: (index, url) {
+                final query = Uri(
+                    queryParameters: {
+                      'current': [index.toString()]
+                    },
+                    path: '/photos'
+                  );
+                GoRouter.of(context).push(query.toString(), extra: question.imageUrls);
+              },
+            ),
           const SizedBox(
             height: 8,
           ),
@@ -125,7 +136,8 @@ class QuestionDetail extends ConsumerWidget {
 
 class QuestionDetailImages extends ConsumerWidget {
   final List<String> imageUrls;
-  const QuestionDetailImages({required this.imageUrls, Key? key}) : super(key: key);
+  final Function(int, String) onImageTapped;
+  const QuestionDetailImages({required this.imageUrls, required this.onImageTapped, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -144,7 +156,7 @@ class QuestionDetailImages extends ConsumerWidget {
                   fit: BoxFit.cover,
                   child: InkWell(
                     onTap: () {
-
+                      onImageTapped(index, imageUrls[index]);
                     },
                   ),
               )
