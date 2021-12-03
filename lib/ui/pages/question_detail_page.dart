@@ -1,5 +1,5 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:qomalin_app/models/entities/question.dart';
@@ -63,9 +63,23 @@ class QuestionDetail extends ConsumerWidget {
           const SizedBox(
             height: 8,
           ),
-          Text(
-            question.text ?? '',
-          ),
+          if(question.text?.isNotEmpty == true)
+            Text(
+              question.text ?? '',
+            ),
+          if(question.imageUrls.isNotEmpty)
+            QuestionDetailImages(
+              imageUrls: question.imageUrls,
+              onImageTapped: (index, url) {
+                final query = Uri(
+                    queryParameters: {
+                      'current': [index.toString()]
+                    },
+                    path: '/photos'
+                  );
+                GoRouter.of(context).push(query.toString(), extra: question.imageUrls);
+              },
+            ),
           const SizedBox(
             height: 8,
           ),
@@ -116,5 +130,41 @@ class QuestionDetail extends ConsumerWidget {
         ],
       ),
     ));
+  }
+}
+
+
+class QuestionDetailImages extends ConsumerWidget {
+  final List<String> imageUrls;
+  final Function(int, String) onImageTapped;
+  const QuestionDetailImages({required this.imageUrls, required this.onImageTapped, Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return SizedBox(
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.width / 16 * 9,
+
+      child: PageView.builder(
+        itemCount: imageUrls.length,
+        controller: PageController(viewportFraction: 0.85),
+        itemBuilder: (BuildContext context, int index) {
+          return Padding(
+              padding: const EdgeInsets.only(right: 8),
+              child: Ink.image(
+                  image: CachedNetworkImageProvider(
+                    imageUrls[index]
+                  ),
+                  fit: BoxFit.cover,
+                  child: InkWell(
+                    onTap: () {
+                      onImageTapped(index, imageUrls[index]);
+                    },
+                  ),
+              )
+          );
+        },
+      )
+    );
   }
 }
