@@ -12,6 +12,9 @@ class PhotosPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, ref) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text("画像一覧"),
+      ),
       body: PageView.builder(
           itemCount: imageUrls.length,
           controller: PageController(initialPage: current),
