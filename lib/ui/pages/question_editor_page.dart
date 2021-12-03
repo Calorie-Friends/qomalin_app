@@ -7,17 +7,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:qomalin_app/models/entities/question.dart';
 import 'package:qomalin_app/providers/questions.dart';
 
-class QuestionEditorPage extends ConsumerStatefulWidget {
-  final double? latitude;
-  final double? longitude;
-  const QuestionEditorPage({this.latitude, this.longitude ,Key? key}) : super(key: key);
-
-  @override
-  // ignore: no_logic_in_create_state
-  ConsumerState<ConsumerStatefulWidget> createState() => QuestionEditorState(latitude: latitude, longitude: longitude);
-}
-
-
 final _titleStateProvider = StateProvider.autoDispose<String>((ref) => '');
 
 final _titleValidationMsg = StateProvider.autoDispose<String?>((ref) {
@@ -42,25 +31,34 @@ final _textValidationMsg = StateProvider.autoDispose<String?>((ref) {
   return null;
 });
 
-class QuestionEditorState extends ConsumerState {
-  final _titleEditingController = TextEditingController();
-  final _textEditingController = TextEditingController();
+final _titleEditingControllerProvider = Provider.autoDispose((ref) => TextEditingController());
+final _textEditingControllerProvider = Provider.autoDispose((ref) => TextEditingController());
+
+class QuestionEditorPage extends ConsumerWidget {
   final double? latitude;
   final double? longitude;
+  final String? questionId;
+  final String? title;
+  final String? text;
 
 
-  QuestionEditorState(
+  const QuestionEditorPage(
     {Key? key,
       this.latitude,
       this.longitude,
-    });
+      this.title,
+      this.text,
+      this.questionId
+    }) : super(key: key);
 
 
   @override
-  Widget build(BuildContext context) {
-
+  Widget build(BuildContext context, WidgetRef ref) {
+    final titleEditingController = ref.watch(_titleEditingControllerProvider);
+    final textEditingController = ref.watch(_textEditingControllerProvider);
     final titleValidationErrorMsg = ref.watch(_titleValidationMsg);
     final textValidationErrorMsg = ref.watch(_textValidationMsg);
+
     final enable = titleValidationErrorMsg == null || textValidationErrorMsg == null;
     return Scaffold(
       appBar: AppBar(
@@ -82,7 +80,7 @@ class QuestionEditorState extends ConsumerState {
                 onChanged: (text) {
                   ref.read(_titleStateProvider.state).state = text;
                 },
-                controller: _titleEditingController,
+                controller: titleEditingController,
               ),
             ),
             //本文
@@ -98,7 +96,7 @@ class QuestionEditorState extends ConsumerState {
                   hintText: "必須",
                   errorText: textValidationErrorMsg
                 ),
-                controller: _textEditingController,
+                controller: textEditingController,
                 onChanged: (text) {
                   ref.read(_textStateProvider.state).state = text;
                 },
@@ -114,8 +112,8 @@ class QuestionEditorState extends ConsumerState {
               return;
             }
             final uid = FirebaseAuth.instance.currentUser!.uid;
-            final title = _titleEditingController.text;
-            final text = _textEditingController.text;
+            final title = titleEditingController.text;
+            final text = textEditingController.text;
             final double lat;
             final double lng;
 
