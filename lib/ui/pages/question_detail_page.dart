@@ -1,5 +1,5 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:qomalin_app/models/entities/question.dart';
@@ -152,7 +152,9 @@ class QuestionDetailImages extends ConsumerWidget {
           return Padding(
               padding: const EdgeInsets.only(right: 8),
               child: Ink.image(
-                  image: NetworkImage(imageUrls[index]),
+                  image: CachedNetworkImageProvider(
+                    imageUrls[index]
+                  ),
                   fit: BoxFit.cover,
                   child: InkWell(
                     onTap: () {
