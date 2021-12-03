@@ -26,7 +26,7 @@ class ProfileEditorState extends ConsumerState{
   final picker = ImagePicker();
 
   Future _getAvatarIcon() async {
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery, imageQuality: 85);
 
     setState(() {
       if (pickedFile != null) {
