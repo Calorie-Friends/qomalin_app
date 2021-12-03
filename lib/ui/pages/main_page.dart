@@ -47,6 +47,7 @@ class MainState extends ConsumerState {
         iconSize: 26,
         showSelectedLabels: true,
         showUnselectedLabels: false,
+        backgroundColor: Colors.white,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'ホーム'),
           BottomNavigationBarItem(icon: Icon(Icons.location_on_outlined), label: 'マップ'),
