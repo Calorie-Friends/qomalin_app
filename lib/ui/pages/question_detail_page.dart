@@ -63,9 +63,12 @@ class QuestionDetail extends ConsumerWidget {
           const SizedBox(
             height: 8,
           ),
-          Text(
-            question.text ?? '',
-          ),
+          if(question.text?.isNotEmpty == true)
+            Text(
+              question.text ?? '',
+            ),
+          if(question.imageUrls.isNotEmpty)
+            QuestionDetailImages(imageUrls: question.imageUrls),
           const SizedBox(
             height: 8,
           ),
@@ -116,5 +119,38 @@ class QuestionDetail extends ConsumerWidget {
         ],
       ),
     ));
+  }
+}
+
+
+class QuestionDetailImages extends ConsumerWidget {
+  final List<String> imageUrls;
+  const QuestionDetailImages({required this.imageUrls, Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return SizedBox(
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.width / 16 * 9,
+
+      child: PageView.builder(
+        itemCount: imageUrls.length,
+        controller: PageController(viewportFraction: 0.85),
+        itemBuilder: (BuildContext context, int index) {
+          return Padding(
+              padding: const EdgeInsets.only(right: 8),
+              child: Ink.image(
+                  image: NetworkImage(imageUrls[index]),
+                  fit: BoxFit.cover,
+                  child: InkWell(
+                    onTap: () {
+
+                    },
+                  ),
+              )
+          );
+        },
+      )
+    );
   }
 }
