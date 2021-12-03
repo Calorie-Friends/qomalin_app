@@ -9,7 +9,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:qomalin_app/models/entities/question.dart';
 import 'package:qomalin_app/providers/auth.dart';
 import 'package:qomalin_app/providers/firestore.dart';
-import 'package:qomalin_app/providers/location.dart';
 import 'package:qomalin_app/providers/questions.dart';
 import 'package:qomalin_app/router.dart';
 
@@ -180,32 +179,6 @@ class NearQuestionsExamplePage extends ConsumerWidget {
   }
 }
 
-class CurrentLocationExamplePage extends ConsumerWidget {
-  const CurrentLocationExamplePage({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    ref.watch(locationPositionStreamProvider).when(
-        data: (data) {
-          log("location:$data");
-        },
-        error: (e, s, t) {},
-        loading: (a) {
-          log("location loading");
-        });
-
-    ref.watch(locationServiceStatusStreamProvider).when(data: (data) {
-      log("data$data");
-    }, error: (e, s, t) {
-      log("error:$e, $s, $t");
-    }, loading: (a) {
-      log("loading");
-    });
-    return Column(
-      children: const [],
-    );
-  }
-}
 
 Future setupWhenBeforeRunApp() async {
   WidgetsFlutterBinding.ensureInitialized();

@@ -6,6 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:qomalin_app/providers/auth.dart';
 import 'package:qomalin_app/ui/pages/answer_editor_page.dart';
 import 'package:qomalin_app/ui/pages/main_page.dart';
+import 'package:qomalin_app/ui/pages/profile_editor_page.dart';
 import 'package:qomalin_app/ui/pages/photos_page.dart';
 import 'package:qomalin_app/ui/pages/question_detail_page.dart';
 import 'package:qomalin_app/ui/pages/question_editor_page.dart';
@@ -51,6 +52,12 @@ final router = Provider<GoRouter>((ref) {
                   child: QuestionDetailPage(questionId: state.params['questionId']!)
               );
             }
+        ),
+        GoRoute(
+          path: "/me/profile/edit",
+          pageBuilder: (context, state){
+            return MaterialPage(key: state.pageKey, child: const ProfileEditorPage());
+          }
         ),
         GoRoute(
             path: "/photos",
