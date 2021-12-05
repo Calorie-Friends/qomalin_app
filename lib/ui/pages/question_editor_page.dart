@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:qomalin_app/models/entities/question.dart';
 import 'package:qomalin_app/providers/questions.dart';
 
@@ -58,11 +59,8 @@ final _textEditingControllerProvider = Provider
 
 final _isSending = StateProvider.autoDispose((ref) => false);
 
-final _images = StateProvider.autoDispose.family<List<TmpImageFile>, List<TmpImageFile>?>((ref, tmpFiles) {
-  if(tmpFiles == null) {
-    return [];
-  }
-  return tmpFiles;
+final _images = StateProvider.autoDispose<List<TmpImageFile>>((ref) {
+  return [];
 });
 
 class QuestionEditorPage extends ConsumerWidget {
@@ -71,15 +69,16 @@ class QuestionEditorPage extends ConsumerWidget {
   final String? questionId;
   final String? title;
   final String? text;
+  final ImagePicker _picker = ImagePicker();
 
 
-  const QuestionEditorPage(
+  QuestionEditorPage(
     {Key? key,
       this.latitude,
       this.longitude,
       this.title,
       this.text,
-      this.questionId
+      this.questionId,
     }) : super(key: key);
 
 
@@ -89,8 +88,30 @@ class QuestionEditorPage extends ConsumerWidget {
     final textEditingController = ref.watch(_textEditingControllerProvider(text));
     final titleValidationErrorMsg = ref.watch(_titleValidationMsg);
     final textValidationErrorMsg = ref.watch(_textValidationMsg);
+    final imageList = ref.watch(_images);
     final isSending = ref.watch(_isSending);
     final enable = titleValidationErrorMsg == null && textValidationErrorMsg == null && !isSending;
+
+    void pickImage() async {
+      final pickedImage = await _picker.pickImage(
+        source: ImageSource.gallery,
+        imageQuality: 75,
+        maxHeight: 1280,
+        maxWidth: 720
+      );
+      if(pickedImage != null) {
+        final newList = [...imageList, TmpImageFile(imageUrl: null, file: File(pickedImage.path))];
+        ref.read(_images.state).state = newList;
+      }
+    }
+
+    void dropImage(int index) async {
+      final newList = [...imageList];
+      newList.removeAt(index);
+      ref.read(_images.state).state = newList;
+    }
+
+    log("images :${imageList.length}");
     return Scaffold(
       appBar: AppBar(
         title: const Text('こまりん作成'),
@@ -131,10 +152,44 @@ class QuestionEditorPage extends ConsumerWidget {
                 ref.read(_textStateProvider.state).state = text;
               },
             ),
+            const SizedBox(height: 16),
+
+            SizedBox(
+              height: 120,
+              child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: imageList.length * 2,
+
+
+                  itemBuilder: (BuildContext context, int index) {
+                    if(index % 2 != 0) {
+                      return const SizedBox(width: 16);
+                    }
+                    final file = imageList[index ~/ 2];
+                    final ImageProvider provider;
+                    if(file.file == null) {
+                      provider = NetworkImage(file.imageUrl!);
+                    }else{
+                      provider = FileImage(file.file!);
+                    }
+                    return SizedBox(
+                      child: Image(
+                          image: provider,
+                          fit: BoxFit.cover,
+                          width: 120,
+                          height: 120
+                      ),
+                    );
+
+                  }
+              ),
+            ),
+
           ],
         ),
       ),
       persistentFooterButtons: [
+        TextButton.icon(onPressed: pickImage, icon: Icon(Icons.add_a_photo), label: Text("写真を追加")),
         ElevatedButton(
           onPressed: enable ? () async {
             if(!enable) {
