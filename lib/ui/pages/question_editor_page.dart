@@ -7,6 +7,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:qomalin_app/models/entities/question.dart';
+import 'package:qomalin_app/providers/file.dart';
 import 'package:qomalin_app/providers/questions.dart';
 
 final _titleStateProvider = StateProvider.autoDispose<String>((ref) => '');
@@ -105,11 +106,7 @@ class QuestionEditorPage extends ConsumerWidget {
       }
     }
 
-    void dropImage(int index) async {
-      final newList = [...imageList];
-      newList.removeAt(index);
-      ref.read(_images.state).state = newList;
-    }
+
 
     log("images :${imageList.length}");
     return Scaffold(
@@ -189,7 +186,7 @@ class QuestionEditorPage extends ConsumerWidget {
         ),
       ),
       persistentFooterButtons: [
-        TextButton.icon(onPressed: pickImage, icon: Icon(Icons.add_a_photo), label: Text("写真を追加")),
+        TextButton.icon(onPressed: pickImage, icon: const Icon(Icons.add_a_photo), label: const Text("写真を追加")),
         ElevatedButton(
           onPressed: enable ? () async {
             if(!enable) {
@@ -211,14 +208,25 @@ class QuestionEditorPage extends ConsumerWidget {
                 lat = latitude!;
                 lng = longitude!;
               }
-              log("作成準備:title:$title, text:$text, location.latitude:$lat, location.longitude:$lng");
+              final imageUrls = await Future.wait(
+                imageList.map((e) async {
+                  if(e.file == null) {
+                    return e.imageUrl!;
+                  }else{
+                    return await ref.read(FileProviders.fileRepositoryProvider())
+                        .upload(e.file!);
+                  }
+                })
+              );
+
+              log("作成準備:title:$title, text:$text, location.latitude:$lat, location.longitude:$lng, imageUrls:$imageUrls");
               final question = Question.newQuestion(
                   title: title,
                   text: text,
                   userId: uid,
                   latitude: lat,
                   longitude: lng,
-                  imageUrls: []);
+                  imageUrls: imageUrls);
               await ref
                   .read(QuestionProviders.questionRepositoryProvider())
                   .create(question);
