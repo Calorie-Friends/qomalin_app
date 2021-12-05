@@ -148,7 +148,8 @@ class QuestionFireDTO {
       'createdAt': Timestamp.fromDate(createdAt),
       'updatedAt': Timestamp.fromDate(updatedAt),
       'userId': userId,
-      'user': user
+      'user': user,
+      'imageUrls': imageUrls
     };
   }
 
