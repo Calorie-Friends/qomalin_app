@@ -40,7 +40,6 @@ class Question {
       required double latitude,
       required double longitude,
       required List<String> imageUrls}) {
-    final now = DateTime.now();
     return Question(
         id: "",
         title: title,
@@ -50,8 +49,8 @@ class Question {
         user: null,
         userId: userId,
         imageUrls: imageUrls,
-        createdAt: DateTime.now(),
-        updatedAt: now);
+        createdAt: null,
+        updatedAt: null);
   }
 
 
