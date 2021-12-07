@@ -24,6 +24,7 @@ class ProfileEditorState extends ConsumerState{
   final _usernameEditingController = TextEditingController();
   final _descriptionEditingController = TextEditingController();
   XFile? _avatarIcon;
+  String? _avatarIconUrl;
   final picker = ImagePicker();
 
   Future _getAvatarIcon() async {
@@ -39,6 +40,22 @@ class ProfileEditorState extends ConsumerState{
   }
 
   @override
+  void initState() {
+    final fireUser = ref.read(authNotifierProvider).fireAuthUser;
+    final isNewAccount = fireUser?.metadata.creationTime == fireUser?.metadata.lastSignInTime;
+    if(!isNewAccount) {
+      final uid = ref.read(authNotifierProvider).fireAuthUser?.uid;
+      ref.read(UserProviders.userRepository()).find(uid!).then((value) {
+        _usernameEditingController.text = value.username;
+        _descriptionEditingController.text = value.description ?? '';
+        setState(() {
+          _avatarIconUrl = value.avatarIcon;
+        });
+      });
+    }
+    super.initState();
+  }
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -53,9 +70,9 @@ class ProfileEditorState extends ConsumerState{
               RawMaterialButton(
                 onPressed: _getAvatarIcon,
                 child: () {
-                  if(_avatarIcon == null) {
+                  if(_avatarIcon == null && _avatarIconUrl == null) {
                     return const Icon(Icons.person_sharp, size: 150,);
-                  }else{
+                  }else if(_avatarIcon != null){
                     return Container(
                       width: 150,
                       height: 150,
@@ -65,6 +82,19 @@ class ProfileEditorState extends ConsumerState{
                           fit: BoxFit.fill,
                           image: FileImage(File(_avatarIcon!.path)),
                         )
+                      ),
+
+                    );
+                  }else{
+                    return Container(
+                      width: 150,
+                      height: 150,
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          image: DecorationImage(
+                            fit: BoxFit.fill,
+                            image: NetworkImage(_avatarIconUrl!),
+                          )
                       ),
 
                     );
@@ -112,10 +142,26 @@ class ProfileEditorState extends ConsumerState{
         ElevatedButton(
           onPressed: () async {
             final fileRepository = ref.read(FileProviders.fileRepositoryProvider());
-            var avatarIconPath = await fileRepository.upload(File(_avatarIcon!.path));
+            final String? avatarIcon;
+            if(_avatarIcon != null) {
+              avatarIcon = await fileRepository.upload(File(_avatarIcon!.path));
+            }else{
+              avatarIcon = _avatarIconUrl;
+            }
             final userRepository = ref.read(UserProviders.userRepository());
             final uid = ref.read(authNotifierProvider).fireAuthUser?.uid;
-            userRepository.save(User(id: uid!, username: _usernameEditingController.text, avatarIcon: avatarIconPath, description: _descriptionEditingController.text));
+            userRepository.save(
+                User(
+                  id: uid!,
+                  username: _usernameEditingController.text,
+                  avatarIcon: avatarIcon,
+                  description: _descriptionEditingController.text
+                )
+            ).then((value) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('更新に成功しました。'))
+              );
+            });
           },
           child: const Text("保存"),
         ),
