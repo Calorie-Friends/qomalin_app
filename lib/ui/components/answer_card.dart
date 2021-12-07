@@ -1,22 +1,20 @@
 import 'package:flutter/material.dart';
 
 class AnswerCard extends StatelessWidget {
-  final String title;
   final String text;
   final String? avatarIcon;
   final String username;
-  final VoidCallback onQuestionPressed;
+  final VoidCallback onAnswerPressed;
   final VoidCallback onUserPressed;
   final int favorite;
   final VoidCallback onFavoritePressed;
 
   const AnswerCard(
       {Key? key,
-      required this.title,
       required this.text,
       required this.avatarIcon,
       required this.username,
-      required this.onQuestionPressed,
+      required this.onAnswerPressed,
       required this.onUserPressed,
       required this.favorite,
       required this.onFavoritePressed})
@@ -29,7 +27,7 @@ class AnswerCard extends StatelessWidget {
       margin: const EdgeInsets.symmetric(vertical: 20),
       color: Colors.white,
       child: InkWell(
-        onTap: onQuestionPressed,
+        onTap: onAnswerPressed,
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Column(

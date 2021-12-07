@@ -13,7 +13,7 @@ class NotificationPage extends StatelessWidget {
       body: ListView(
 
         children: [
-          AnswerCard(title: 'aaaaaaaaaaa', text: 'cccccccccccccccccccccccccccccccccccccccccccccccccccccccccc', avatarIcon: null, username: 'dddddddddddddddddd', onQuestionPressed: (){}, onUserPressed: (){},favorite: 8,onFavoritePressed: (){},)
+          AnswerCard(text: 'cccccccccccccccccccccccccccccccccccccccccccccccccccccccccc', avatarIcon: null, username: 'dddddddddddddddddd', onAnswerPressed: (){}, onUserPressed: (){},favorite: 8,onFavoritePressed: (){},)
         ],
       )
     );
