@@ -31,9 +31,8 @@ class AnswerRepositoryFirestoreImpl extends AnswerRepository{
           createdAt: answer.createdAt,
           updatedAt: answer.updatedAt
       );
-    }else{
-      throw QuestionNotFoundException();
     }
 
+    throw QuestionNotFoundException();
   }
 }
