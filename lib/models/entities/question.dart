@@ -17,8 +17,8 @@ class Question {
   final String userId;
   //final DocumentReference<User> user;
   final User? user;
-  final DateTime createdAt;
-  final DateTime updatedAt;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
   const Question(
       {required this.id,
       required this.title,
@@ -94,8 +94,8 @@ class QuestionFireDTO {
   final List<String> imageUrls;
   final String userId;
   final DocumentReference<User> user;
-  final DateTime createdAt;
-  final DateTime updatedAt;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
   const QuestionFireDTO(
       {required this.id,
         required this.title,
@@ -145,8 +145,8 @@ class QuestionFireDTO {
       'text': text,
       'address': address,
       'location': geo.data,
-      'createdAt': Timestamp.fromDate(createdAt),
-      'updatedAt': Timestamp.fromDate(updatedAt),
+      'createdAt': createdAt == null ? FieldValue.serverTimestamp() : Timestamp.fromDate(createdAt!),
+      'updatedAt': updatedAt == null ? FieldValue.serverTimestamp() : Timestamp.fromDate(updatedAt!),
       'userId': userId,
       'user': user,
       'imageUrls': imageUrls
