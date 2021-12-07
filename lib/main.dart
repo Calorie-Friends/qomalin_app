@@ -9,7 +9,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:qomalin_app/models/entities/question.dart';
 import 'package:qomalin_app/providers/auth.dart';
 import 'package:qomalin_app/providers/firestore.dart';
-import 'package:qomalin_app/providers/location.dart';
 import 'package:qomalin_app/providers/questions.dart';
 import 'package:qomalin_app/router.dart';
 
@@ -27,7 +26,7 @@ class App extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     if(Platform.isAndroid) {
       SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
-          systemNavigationBarColor: const Color.fromARGB(255, 250, 250, 250),
+          systemNavigationBarColor: Colors.white,
           systemNavigationBarIconBrightness: Brightness.dark,
       ));
     }
@@ -109,7 +108,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
       body: const NearQuestionsExamplePage(),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          final uid = ref.read(authNotifierProvider)?.fireAuthUser?.uid;
+          final uid = ref.read(authNotifierProvider).fireAuthUser?.uid;
           final location = await Geolocator.getLastKnownPosition();
           ref.read(QuestionProviders.questionRepositoryProvider()).create(
               Question(
@@ -120,7 +119,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                   location: LocationPoint(
                       latitude: location!.latitude,
                       longitude: location.longitude),
-                  userId: uid,
+                  userId: uid!,
                   imageUrls: const [],
                   user: null,
                   createdAt: DateTime.now(),
@@ -180,32 +179,6 @@ class NearQuestionsExamplePage extends ConsumerWidget {
   }
 }
 
-class CurrentLocationExamplePage extends ConsumerWidget {
-  const CurrentLocationExamplePage({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    ref.watch(locationPositionStreamProvider).when(
-        data: (data) {
-          log("location:$data");
-        },
-        error: (e, s, t) {},
-        loading: (a) {
-          log("location loading");
-        });
-
-    ref.watch(locationServiceStatusStreamProvider).when(data: (data) {
-      log("data$data");
-    }, error: (e, s, t) {
-      log("error:$e, $s, $t");
-    }, loading: (a) {
-      log("loading");
-    });
-    return Column(
-      children: const [],
-    );
-  }
-}
 
 Future setupWhenBeforeRunApp() async {
   WidgetsFlutterBinding.ensureInitialized();

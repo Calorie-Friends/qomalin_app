@@ -30,7 +30,7 @@ class _HomePageState extends State<HomePage> {
         text: 'トイレを探しています',
         address: '日本　大阪',
         location: LocationPoint(latitude: 0.00,longitude: 0.00),
-        user: User(id: 'aeag',username: 'agrgega',avatarIcon: ''),
+        user: User(id: 'aeag',username: 'agrgega',avatarIcon: '', description: ''),
         userId: 'aifejfeagj;agja;',
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
