@@ -28,7 +28,7 @@ class MainState extends ConsumerState {
   final List<Widget> tabs = [
     HomePage(),
     const MapPage(),
-    const NotificationPage(),
+    NotificationPage(),
     const AccountPage()
   ];
 
