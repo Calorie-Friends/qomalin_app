@@ -1,3 +1,4 @@
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:qomalin_app/converters.dart';
 import 'package:qomalin_app/models/entities/user.dart';
@@ -7,7 +8,7 @@ class Answer {
   final String text;
   final String questionId;
   final String userId;
-  final User user;
+  final User? user;
   final DateTime? createdAt;
   final DateTime? updatedAt;
 
@@ -21,6 +22,17 @@ class Answer {
     required this.updatedAt
   });
 
+  static Answer newAnswer({required String text, required String questionId, required String userId}) {
+    return Answer(
+      id: "",
+      text: text,
+      questionId: questionId,
+      userId: userId,
+      user: null,
+      createdAt: null,
+      updatedAt: null
+    );
+  }
 
 }
 
@@ -71,7 +83,6 @@ class AnswerFireDTO {
 
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
       'text': text,
       'questionId': questionId,
       'userId': userId,
