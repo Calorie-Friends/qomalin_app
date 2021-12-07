@@ -8,8 +8,8 @@ class Answer {
   final String questionId;
   final String userId;
   final User user;
-  final DateTime createdAt;
-  final DateTime updatedAt;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
 
   Answer({
     required this.id,
@@ -30,8 +30,8 @@ class AnswerFireDTO {
   final String questionId;
   final String userId;
   final DocumentReference<User> user;
-  final DateTime createdAt;
-  final DateTime updatedAt;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
   AnswerFireDTO(
       {required this.id,
       required this.text,
@@ -76,8 +76,8 @@ class AnswerFireDTO {
       'questionId': questionId,
       'userId': userId,
       'user': user,
-      'createdAt': Timestamp.fromDate(createdAt),
-      'updatedAt': Timestamp.fromDate(updatedAt)
+      'createdAt': createdAt == null ? FieldValue.serverTimestamp() : Timestamp.fromDate(createdAt!),
+      'updatedAt': updatedAt == null ? FieldValue.serverTimestamp() : Timestamp.fromDate(updatedAt!)
     };
   }
 
@@ -89,8 +89,7 @@ class AnswerFireDTO {
         questionId,
         userId: userId,
         user: (await user.get()).data()!,
-        createdAt:
-        createdAt,
+        createdAt: createdAt,
         updatedAt: updatedAt
     );
   }

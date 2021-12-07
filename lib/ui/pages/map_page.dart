@@ -53,7 +53,7 @@ class MapState extends ConsumerState {
     _controller.future.then((value) {
     });
 
-    final questions = state.distancedBy().sorted((a, b) => a.createdAt.compareTo(b.createdAt)).toList();
+    final questions = state.distancedBy().sorted((a, b) => a.createdAt!.compareTo(b.createdAt!)).toList();
 
     final pageController = PageController(viewportFraction: 0.90);
     return Scaffold(
