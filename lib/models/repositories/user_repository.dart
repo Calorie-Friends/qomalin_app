@@ -22,10 +22,11 @@ class UserRepositoryImpl extends UserRepository{
     }
     return await reader(FirestoreProviders.firestoreProvider()).runTransaction((transaction) async {
 
-      reader(FirestoreProviders.firestoreProvider())
+      await reader(FirestoreProviders.firestoreProvider())
         .collection('usernames')
         .doc(user.username)
-        .update({'userId': user.id });
+        .set({'userId': user.id });
+
       await reader(FirestoreProviders.userCollectionRefProvider())
           .doc(user.id).update(user.toMap());
 
