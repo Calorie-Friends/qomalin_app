@@ -16,11 +16,12 @@ class AnswerRepositoryFirestoreImpl extends AnswerRepository{
       .get();
 
     if(questionDoc.exists){
+      final answerDTO = AnswerFireDTO.fromEntity(FirebaseFirestore.instance, answer);
       final answerDoc = await FirebaseFirestore.instance
           .collection("questions")
           .doc(answer.questionId)
           .collection('answers')
-          .add({'text': answer.text, 'userId': answer.userId, 'createdAt': answer.createdAt, 'updatedAt': answer.updatedAt});
+          .add(answerDTO.toMap());
 
       return Answer(
           id: answerDoc.id,
