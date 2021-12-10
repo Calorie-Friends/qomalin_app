@@ -30,7 +30,8 @@ class AnswerRepositoryFirestoreImpl extends AnswerRepository{
           userId: answer.userId,
           user: answer.user,
           createdAt: answer.createdAt,
-          updatedAt: answer.updatedAt
+          updatedAt: answer.updatedAt,
+          thankIds: answer.thankIds,
       );
     }
 
