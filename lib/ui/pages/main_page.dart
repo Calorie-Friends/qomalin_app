@@ -29,7 +29,7 @@ class MainState extends ConsumerState {
     HomePage(),
     const MapPage(),
     NotificationPage(),
-    const AccountPage()
+    AccountPage()
   ];
 
   @override
