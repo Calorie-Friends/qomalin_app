@@ -22,28 +22,7 @@ class QuestionDetailPage extends ConsumerWidget {
       : super(key: key);
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final answers = ref.watch(_answersStreamProvider(questionId)).map(
-      data: (data) {
 
-        return Padding(
-          padding: const EdgeInsets.only(left: 24),
-          child: AnswerCardList(
-            onAnswerCardSelectedListener:(a) {},
-            onAnswerUserPressedListener: (u) {},
-            onAnswerFavoritePressedListener: (a) {},
-            answers: data.value,
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-          )
-        );
-      },
-      error: (e) {
-        return const Text("回答の取得に失敗しました。");
-      },
-      loading: (e) {
-        return const CircularProgressIndicator();
-      }
-    );
 
     return ref.watch(_questionFutureProvider(questionId)).map(
       data: (data) {
@@ -54,7 +33,7 @@ class QuestionDetailPage extends ConsumerWidget {
           body: ListView(
             children: [
               QuestionDetail(question: data.value),
-              answers,
+              QuestionDetailAnswers(questionId: questionId)
             ],
             padding: const EdgeInsets.only(bottom: 80),
           ),
@@ -210,6 +189,35 @@ class QuestionDetailImages extends ConsumerWidget {
           );
         },
       )
+    );
+  }
+}
+
+class QuestionDetailAnswers extends ConsumerWidget {
+  final String questionId;
+  const QuestionDetailAnswers({Key? key, required this.questionId}) : super(key: key);
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return ref.watch(_answersStreamProvider(questionId)).map(
+        data: (data) {
+          return Padding(
+              padding: const EdgeInsets.only(left: 24),
+              child: AnswerCardList(
+                onAnswerCardSelectedListener:(a) {},
+                onAnswerUserPressedListener: (u) {},
+                onAnswerFavoritePressedListener: (a) {},
+                answers: data.value,
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+              )
+          );
+        },
+        error: (e) {
+          return const Text("回答の取得に失敗しました。");
+        },
+        loading: (e) {
+          return const CircularProgressIndicator();
+        }
     );
   }
 }
