@@ -27,6 +27,7 @@ class AnswerServiceFirestoreImpl implements AnswerService {
       .doc(questionId)
       .collection('answers')
       .withAnswerConverter()
+      .orderBy('createdAt')
       .snapshots();
 
     await for(final answer in answersStream) {
