@@ -19,7 +19,16 @@ class AccountPage extends StatelessWidget {
               width: double.infinity,
               margin: const EdgeInsets.all(16),
               height: 70,
-              child: const Text("こんにちは"),
+              child: Row(
+                children:const [
+                  //TODO: firestoreからavatarとusernameを取得してUIに反映する
+                  Icon(Icons.account_circle, size: 80,),
+                  SizedBox(
+                    width: 30,
+                  ),
+                  Text("佐藤", style: TextStyle(fontSize: 25),),
+                ],
+              ),
             ),
           ),
           TextButton(
