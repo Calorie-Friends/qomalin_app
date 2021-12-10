@@ -73,7 +73,7 @@ class AccountPage extends ConsumerWidget{
               onPressed: (){
                 //TODO: ログアウトを実装する
               },
-              child: const Text("ログアウト"),
+              child: const Text("ログアウト", style: TextStyle(color: Colors.red),),
             ),
           ],
         );
