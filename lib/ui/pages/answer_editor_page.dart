@@ -1,6 +1,6 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:qomalin_app/models/entities/answer.dart';
@@ -49,8 +49,9 @@ class AnswerEditorPage extends ConsumerWidget{
               try{
                 await answerRepository.create(answer);
                 Navigator.of(context).pop();
-              }catch(e){
-                final snackBar = SnackBar(content: Text('回答の追加に失敗しました!'));
+              }catch(e, st){
+                log("回答作成処理失敗", error: e, stackTrace: st);
+                const snackBar = SnackBar(content: Text('回答の追加に失敗しました!'));
                 ScaffoldMessenger.of(context).showSnackBar(snackBar);
               }
             },

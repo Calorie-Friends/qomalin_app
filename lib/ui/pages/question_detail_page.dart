@@ -3,11 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:qomalin_app/models/entities/question.dart';
+import 'package:qomalin_app/providers/answer.dart';
 import 'package:qomalin_app/providers/questions.dart';
+import 'package:qomalin_app/ui/components/answer_card_list.dart';
 
 final _questionFutureProvider = FutureProvider.autoDispose.family<Question, String>((ref, questionId) {
   return ref.read(QuestionProviders.questionRepositoryProvider())
       .find(questionId);
+});
+
+final _answersStreamProvider = StreamProvider.autoDispose.family((ref, String questionId) {
+  return ref.read(AnswerProviders.answerServiceProvider()).findByQuestion(questionId);
 });
 
 class QuestionDetailPage extends ConsumerWidget {
@@ -17,6 +23,7 @@ class QuestionDetailPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
 
+
     return ref.watch(_questionFutureProvider(questionId)).map(
       data: (data) {
         return Scaffold(
@@ -24,7 +31,11 @@ class QuestionDetailPage extends ConsumerWidget {
             title: Text(data.value.title),
           ),
           body: ListView(
-            children: [QuestionDetail(question: data.value)],
+            children: [
+              QuestionDetail(question: data.value),
+              QuestionDetailAnswers(questionId: questionId)
+            ],
+            padding: const EdgeInsets.only(bottom: 80),
           ),
           floatingActionButton: FloatingActionButton.extended(
             onPressed: () {
@@ -178,6 +189,38 @@ class QuestionDetailImages extends ConsumerWidget {
           );
         },
       )
+    );
+  }
+}
+
+class QuestionDetailAnswers extends ConsumerWidget {
+  final String questionId;
+  const QuestionDetailAnswers({Key? key, required this.questionId}) : super(key: key);
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return ref.watch(_answersStreamProvider(questionId)).map(
+        data: (data) {
+          return Padding(
+              padding: const EdgeInsets.only(left: 24),
+              child: AnswerCardList(
+                onAnswerCardSelectedListener:(a) {},
+                onAnswerUserPressedListener: (u) {},
+                onAnswerFavoritePressedListener: (a) {},
+                answers: data.value,
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+              )
+          );
+        },
+        error: (e) {
+          return const Text("回答の取得に失敗しました。");
+        },
+        loading: (e) {
+          return const Padding(
+            padding: EdgeInsets.all(16),
+            child: Center(child: CircularProgressIndicator())
+          );
+        }
     );
   }
 }
