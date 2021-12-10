@@ -28,13 +28,15 @@ class AnswerCardList extends StatelessWidget {
         final answer = answers[index];
         return AnswerCard(
           text: answer.text,
-          avatarIcon: answer.user.avatarIcon,
-          username: answer.user.username,
+          avatarIcon: answer.user?.avatarIcon,
+          username: answer.user?.username ?? '',
           onAnswerPressed: () {
             onAnswerCardSelectedListener(answer);
           },
           onUserPressed: () {
-            onAnswerUserPressedListener(answer.user);
+            if(answer.user != null) {
+              onAnswerUserPressedListener(answer.user!);
+            }
           },
           onFavoritePressed: () {
             onAnswerFavoritePressedListener(answer);
