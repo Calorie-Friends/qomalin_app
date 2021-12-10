@@ -216,7 +216,10 @@ class QuestionDetailAnswers extends ConsumerWidget {
           return const Text("回答の取得に失敗しました。");
         },
         loading: (e) {
-          return const CircularProgressIndicator();
+          return const Padding(
+            padding: EdgeInsets.all(16),
+            child: Center(child: CircularProgressIndicator())
+          );
         }
     );
   }
