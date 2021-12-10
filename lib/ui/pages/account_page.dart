@@ -8,11 +8,15 @@ class AccountPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        //TODO: 以下はテスト用のボタンなので後で削除する
-        child: TextButton(onPressed: (){
-          GoRouter.of(context).push("/me/profile/edit");
-        }, child: const Text("test")),
+      body: Column(
+        children: [
+          TextButton(
+            onPressed: (){
+              GoRouter.of(context).push("/me/profile/edit");
+            },
+            child: const Text("プロフィール編集", style: TextStyle(color: Colors.black))
+          ),
+        ],
       ),
     );
   }
