@@ -2,7 +2,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:qomalin_app/models/repositories/answer_repository.dart';
 
 final _answerRepositoryProvider = Provider<AnswerRepository>((ref) {
-  return AnswerRepositoryFirestoreImpl();
+  return AnswerRepositoryFirestoreImpl(ref.read);
 });
 
 class AnswerProviders {
