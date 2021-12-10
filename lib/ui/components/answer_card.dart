@@ -23,8 +23,6 @@ class AnswerCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 10,
-      margin: const EdgeInsets.symmetric(vertical: 20),
       color: Colors.white,
       child: InkWell(
         onTap: onAnswerPressed,

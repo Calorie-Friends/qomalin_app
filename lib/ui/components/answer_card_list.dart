@@ -11,19 +11,25 @@ class AnswerCardList extends StatelessWidget {
   final AnswerCardSelectedListener onAnswerCardSelectedListener;
   final AnswerUserPressedListener onAnswerUserPressedListener;
   final AnswerFavoritePressedListener onAnswerFavoritePressedListener;
+  final ScrollPhysics? physics;
+  final bool shrinkWrap;
 
   const AnswerCardList(
       {Key? key,
       required this.onAnswerCardSelectedListener,
       required this.onAnswerUserPressedListener,
       required this.onAnswerFavoritePressedListener,
-      required this.answers})
+      required this.answers,
+      this.physics,
+      this.shrinkWrap = false,
+      })
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      padding: const EdgeInsets.all(4),
+      physics: physics,
+      shrinkWrap: shrinkWrap,
       itemBuilder: (BuildContext context, int index) {
         final answer = answers[index];
         return AnswerCard(
