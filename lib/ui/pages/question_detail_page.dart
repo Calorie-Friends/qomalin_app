@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:qomalin_app/models/entities/question.dart';
 import 'package:qomalin_app/providers/answer.dart';
@@ -107,9 +108,23 @@ class QuestionDetail extends ConsumerWidget {
           const SizedBox(
             height: 8,
           ),
-          const Divider(
-            height: 2,
+          SizedBox(
+            height: 150,
+            child: GoogleMap(
+              mapType: MapType.normal,
+              initialCameraPosition: CameraPosition(
+                  target: LatLng(question.location.latitude, question.location.longitude),
+                  zoom: 15
+              ),
+              markers: {
+                Marker(markerId: MarkerId(question.id), position: LatLng(question.location.latitude, question.location.longitude),)
+              },
+              zoomControlsEnabled: false,
+              myLocationEnabled: false,
+              myLocationButtonEnabled: false,
+            ),
           ),
+
           Row(
             children: [
               const Icon(Icons.location_on_outlined),
