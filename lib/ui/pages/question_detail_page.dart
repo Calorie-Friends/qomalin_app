@@ -7,6 +7,7 @@ import 'package:qomalin_app/models/entities/question.dart';
 import 'package:qomalin_app/providers/answer.dart';
 import 'package:qomalin_app/providers/questions.dart';
 import 'package:qomalin_app/ui/components/answer_card_list.dart';
+import 'package:qomalin_app/ui/pages/thank_editor_dialog.dart';
 
 final _questionFutureProvider = FutureProvider.autoDispose.family<Question, String>((ref, questionId) {
   return ref.read(QuestionProviders.questionRepositoryProvider())
@@ -220,7 +221,13 @@ class QuestionDetailAnswers extends ConsumerWidget {
               child: AnswerCardList(
                 onAnswerCardSelectedListener:(a) {},
                 onAnswerUserPressedListener: (u) {},
-                onAnswerFavoritePressedListener: (a) {},
+                onAnswerFavoritePressedListener: (a) {
+                    showDialog(context: context, builder: (BuildContext context) {
+                      return ThankEditorDialog(
+                        answer: a,
+                      );
+                    });
+                },
                 answers: data.value,
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),

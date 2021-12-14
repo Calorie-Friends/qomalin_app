@@ -1,0 +1,1 @@
+class AnswerCreateFailedException implements Exception {}
