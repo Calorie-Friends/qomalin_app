@@ -95,6 +95,7 @@ class ThankFireDTO {
       'userId': userId,
       'user': userRef,
       'answerId': answerId,
+      'questionId': questionId,
       'createdAt': createdAt ?? FieldValue.serverTimestamp(),
       'updatedAt': updatedAt ?? FieldValue.serverTimestamp()
     };
