@@ -48,8 +48,7 @@ class AnswerCardList extends StatelessWidget {
             onAnswerFavoritePressedListener(answer);
           },
 
-          // TODO: favorite数実装時に正しい値が入るようにする。
-          favorite: 0,
+          favorite: answer.thankIds.length,
         );
       },
       itemCount: answers.length,
