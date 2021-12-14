@@ -208,7 +208,9 @@ class QuestionDetailAnswers extends ConsumerWidget {
                 onAnswerUserPressedListener: (u) {},
                 onAnswerFavoritePressedListener: (a) {
                     showDialog(context: context, builder: (BuildContext context) {
-                      return ThankEditorDialog();
+                      return ThankEditorDialog(
+                        answer: a,
+                      );
                     });
                 },
                 answers: data.value,
