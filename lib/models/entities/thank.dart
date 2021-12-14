@@ -11,6 +11,7 @@ class Thank {
   final String userId;
   final User? user;
   final String answerId;
+  final String questionId;
   final DateTime? createdAt;
   final DateTime? updatedAt;
 
@@ -20,17 +21,19 @@ class Thank {
     required this.userId,
     required this.user,
     required this.answerId,
+    required this.questionId,
     required this.createdAt,
     required this.updatedAt
   });
 
-  static Thank newThank({required String userId, required String answerId, required String? comment}) {
+  static Thank newThank({required String userId, required String questionId, required String answerId, required String? comment}) {
     return Thank(
         id: "",
         comment: comment,
         userId: userId,
         user: null,
         answerId: answerId,
+        questionId: questionId,
         createdAt: null,
         updatedAt: null
     );
@@ -42,6 +45,7 @@ class ThankFireDTO {
   final String? comment;
   final String userId;
   final DocumentReference<User> userRef;
+  final String questionId;
   final String answerId;
   final DateTime? createdAt;
   final DateTime? updatedAt;
@@ -52,6 +56,7 @@ class ThankFireDTO {
     required this.userId,
     required this.userRef,
     required this.answerId,
+    required this.questionId,
     required this.createdAt,
     required this.updatedAt
   });
@@ -63,6 +68,7 @@ class ThankFireDTO {
         comment: thank.comment,
         userId: thank.userId,
         userRef: userCollectionRef.doc(thank.userId),
+        questionId: thank.questionId,
         answerId: thank.answerId,
         createdAt: thank.createdAt,
         updatedAt: thank.updatedAt
@@ -77,6 +83,7 @@ class ThankFireDTO {
         userId: data['userId'],
         userRef: (data['user'] as DocumentReference).withUserConverter(),
         answerId: data['answerId'],
+        questionId: data['questionId'],
         createdAt: data['createdAt'].toDate(),
         updatedAt: data['updatedAt'].toDate()
     );
@@ -100,6 +107,7 @@ class ThankFireDTO {
         comment: comment,
         userId: userId, user: user.data(),
         answerId: answerId,
+        questionId: questionId,
         createdAt: createdAt,
         updatedAt: updatedAt
     );
