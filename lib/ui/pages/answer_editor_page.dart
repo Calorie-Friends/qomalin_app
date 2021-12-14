@@ -49,6 +49,7 @@ class AnswerEditorPage extends ConsumerWidget{
               try{
                 await answerRepository.create(answer);
                 Navigator.of(context).pop();
+
               }catch(e, st){
                 log("回答作成処理失敗", error: e, stackTrace: st);
                 const snackBar = SnackBar(content: Text('回答の追加に失敗しました!'));
