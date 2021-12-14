@@ -50,7 +50,7 @@ class AnswerEditorPage extends ConsumerWidget{
                 await answerRepository.create(answer);
                 Navigator.of(context).pop();
               }catch(e){
-                final snackBar = SnackBar(content: Text('回答の追加に失敗しました!'));
+                const snackBar = SnackBar(content: Text('回答の追加に失敗しました!'));
                 ScaffoldMessenger.of(context).showSnackBar(snackBar);
               }
             },
