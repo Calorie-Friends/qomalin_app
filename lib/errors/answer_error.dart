@@ -1,0 +1,2 @@
+
+class AnswerNotFoundException implements Exception {}
