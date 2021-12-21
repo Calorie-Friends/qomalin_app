@@ -55,6 +55,8 @@ abstract class QuestionService {
   Stream<List<Question>> latestQuestions({int limit = 20});
   
   Future<List<Question>> findByLatLngRange({required LatLng center, required double radius});
+
+  Stream<List<Question>> questionsByUser({required String userId});
 }
 
 class FirebaseQuestionService extends QuestionService {
@@ -107,5 +109,17 @@ class FirebaseQuestionService extends QuestionService {
     log("取得件数:${res.length}");
     final futures = res.map((e) => QuestionFireDTO.fromDocument(e)).map((e) => e.toEntity()).toList();
     return Future.wait(futures);
+  }
+
+  @override
+  Stream<List<Question>> questionsByUser({required String userId}) async*{
+    final events = reader(FirestoreProviders.questionCollectionRefProvider())
+        .where("userId", isEqualTo: userId)
+        .snapshots()
+        .map((event) => event.docs.map((e) => e.data()).toList());
+
+    await for(final list in events) {
+      yield await Future.wait(list.map((e) => e.toEntity()).toList());
+    }
   }
 }
