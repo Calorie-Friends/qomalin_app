@@ -12,7 +12,9 @@ final _userQuestionsStreamProvider = StreamProvider.autoDispose((ref) {
   return ref.read(QuestionProviders.questionServiceProvider()).questionsByUser(userId: "IJsmDX5VZxY3qnc8Qz2K3qRwmth2");
 });
 class UserQuestionList extends ConsumerWidget {
-  const UserQuestionList({Key? key}) : super(key: key);
+  final userId;
+  const UserQuestionList(this.userId, {Key? key}) : super(key: key);
+
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
