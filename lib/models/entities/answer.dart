@@ -66,10 +66,10 @@ class AnswerFireDTO {
         text: data['text'],
         questionId: data['questionId'],
         userId: data['userId'],
-        user: data['user'],
+        user: (data['user'] as DocumentReference).withUserConverter(),
         thankIds: (data['thankIds'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [],
-        createdAt: data['createdAt'].toDate(),
-        updatedAt: data['updatedAt'].toDate()
+        createdAt: data['createdAt']?.toDate(),
+        updatedAt: data['updatedAt']?.toDate()
     );
   }
 

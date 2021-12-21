@@ -25,14 +25,7 @@ final _questionCollectionRefProvider =
       .withQuestionConverter();
 });
 
-final testsProvider =
-    Provider<CollectionReference<Map<String, dynamic>>>((ref) {
-  return ref.read(_firestoreProvider).collection('tests');
-});
 
-final testStreamProvider = StreamProvider((ref) {
-  return ref.read(testsProvider).snapshots();
-});
 
 class FirestoreProviders {
   FirestoreProviders._();

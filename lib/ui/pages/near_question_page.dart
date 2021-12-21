@@ -72,6 +72,7 @@ class NotifierQuestionList extends ConsumerWidget {
         onQuestionUserPressedListener: (u) {
           GoRouter.of(context).push("/users/${u.id}/show");
         }, questions: questions);
+
   }
 
 }
