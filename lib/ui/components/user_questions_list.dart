@@ -8,6 +8,7 @@ import 'package:qomalin_app/providers/questions.dart';
 import 'package:qomalin_app/ui/components/question_card_list.dart';
 
 final _userQuestionsStreamProvider = StreamProvider.autoDispose((ref) {
+  //TODO: ページ呼び出し元から渡されるUserIdをquestionsByUserメソッドの引数にセットする
   return ref.read(QuestionProviders.questionServiceProvider()).questionsByUser(userId: "IJsmDX5VZxY3qnc8Qz2K3qRwmth2");
 });
 class UserQuestionList extends ConsumerWidget {
