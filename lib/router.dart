@@ -12,6 +12,7 @@ import 'package:qomalin_app/ui/pages/question_detail_page.dart';
 import 'package:qomalin_app/ui/pages/question_editor_page.dart';
 import 'package:qomalin_app/ui/pages/signup_page.dart';
 import 'package:qomalin_app/ui/pages/splash_page.dart';
+import 'package:qomalin_app/ui/pages/user_detail_page.dart';
 
 import 'main.dart';
 import 'notifier/auth_notifier.dart';
@@ -70,6 +71,18 @@ final router = Provider<GoRouter>((ref) {
                 ),
               );
             }
+        ),
+        GoRoute(
+          path: "/users/:userId/show",
+          name: "userDetail",
+          pageBuilder: (context, state) {
+            return MaterialPage(
+              key: state.pageKey,
+              child: UserDetailPage(
+                userId: state.params['userId']!,
+              )
+            );
+          }
         ),
         GoRoute(
             path: '/signup',
