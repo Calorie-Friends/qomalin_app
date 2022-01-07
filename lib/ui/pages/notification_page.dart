@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:qomalin_app/models/entities/notification.dart' as entity;
 import 'package:qomalin_app/providers/notification.dart';
@@ -50,25 +51,43 @@ class NotifyCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  CircularAvatarIcon(
-                    avatarIconUrl: notification.user?.avatarIcon,
+        child: InkWell(
+          onTap: () {
+            switch(notification.type) {
+              case entity.NotifyType.answered:
+                GoRouter.of(context).push('/questions/${notification.answer?.questionId}/show');
+                break;
+              case entity.NotifyType.thanked:
+                GoRouter.of(context).push('/questions/${notification.thank?.questionId}/show');
+                break;
+            }
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    CircularAvatarIcon(
+                      avatarIconUrl: notification.user?.avatarIcon,
+                    ),
+                    const SizedBox(width: 8),
+                    Text(notification.user?.username ?? '')
+                  ],
+                ),
+                if(notification.type == entity.NotifyType.thanked)
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text('あなたの回答にお礼が来ました。'),
+                      Text('"${notification.thank?.comment ?? ''}"'),
+                    ],
                   ),
-                  const SizedBox(width: 8),
-                  Text(notification.user?.username ?? '')
-                ],
-              ),
-              if(notification.type == entity.NotifyType.thanked)
-                const Text('あなたの回答にお礼が来ました。'),
-              if(notification.type == entity.NotifyType.answered)
-                const Text('あなたの質問に回答が来ました。'),
-            ],
+                if(notification.type == entity.NotifyType.answered)
+                  const Text('あなたの質問に回答が来ました。'),
+              ],
+            ),
           ),
         )
     );
