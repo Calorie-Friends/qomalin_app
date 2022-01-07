@@ -56,4 +56,8 @@ class AuthNotifier extends StateNotifier<AuthState> {
       throw AuthFailedException();
     }
   }
+
+  Future signOut() async {
+    await reader(firebaseAuthProvider).signOut();
+  }
 }
