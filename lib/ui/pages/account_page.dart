@@ -71,7 +71,7 @@ class AccountPage extends ConsumerWidget{
             ),
             TextButton(
               onPressed: (){
-                //TODO: ログアウトを実装する
+                ref.read(authNotifierProvider.notifier).signOut();
               },
               child: const Text("ログアウト", style: TextStyle(color: Colors.red),),
             ),

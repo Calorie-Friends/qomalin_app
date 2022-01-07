@@ -2,9 +2,11 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:qomalin_app/converters.dart';
 import 'package:qomalin_app/errors/answer_error.dart';
+import 'package:qomalin_app/errors/auth_error.dart';
 import 'package:qomalin_app/errors/question_error.dart';
 import 'package:qomalin_app/errors/thank_error.dart';
 import 'package:qomalin_app/models/entities/thank.dart';
+import 'package:qomalin_app/providers/auth.dart';
 import 'package:qomalin_app/providers/firestore.dart';
 
 class ThankRepository {
@@ -18,6 +20,10 @@ class ThankRepositoryFirestoreImpl implements ThankRepository {
   ThankRepositoryFirestoreImpl(this.reader);
   @override
   Future<Thank> create(Thank thank) async {
+    final uid = reader(authNotifierProvider).fireAuthUser?.uid;
+    if (uid == null) {
+      throw UnauthorizedException();
+    }
     final question = await reader(FirestoreProviders.questionCollectionRefProvider())
         .doc(thank.questionId).get();
     if(!question.exists) {
@@ -28,9 +34,11 @@ class ThankRepositoryFirestoreImpl implements ThankRepository {
     if(!answer.exists) {
       throw AnswerNotFoundException();
     }
-    final addResult = await answer.reference.collection("thanks").withThankConverter()
-      .add(ThankFireDTO.fromEntity(reader, thank));
-    final dto = await addResult.get();
+    final ref = answer.reference.collection("thanks").withThankConverter()
+        .doc(uid);
+    await ref
+      .set(ThankFireDTO.fromEntity(reader, thank));
+    final dto = await ref.get();
     if(!dto.exists) {
       throw AnswerCreateFailedException();
     }
