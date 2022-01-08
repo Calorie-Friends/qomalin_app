@@ -36,7 +36,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
   }
 
   /// Google認証
-  Future signInWithGoogle() async {
+  Future<bool> signInWithGoogle() async {
     try {
       final gUser = await GoogleSignIn(scopes: []).signIn();
       final googleAuth = await gUser?.authentication;
@@ -50,7 +50,9 @@ class AuthNotifier extends StateNotifier<AuthState> {
         state = AuthState.unauthorized();
       } else {
         state = AuthState.authenticated(uc.user!);
+        return uc.user?.metadata.lastSignInTime == uc.user?.metadata.creationTime;
       }
+      return false;
     } on FirebaseAuthException {
       state = AuthState.unauthorized();
       throw AuthFailedException();
