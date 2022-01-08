@@ -29,6 +29,9 @@ class _SignupState extends ConsumerState {
               children: [
                 SignInButton(Buttons.Google, onPressed: () {
                   authNotifier.signInWithGoogle().then((value) {
+                    if(value) {
+                      GoRouter.of(context).push('/me/profile/edit');
+                    }
                     GoRouter.of(context).push('/');
                   }).onError((e, st) {
                     log("error e:$e, st:$st");
