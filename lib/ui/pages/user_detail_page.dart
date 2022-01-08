@@ -69,13 +69,13 @@ class UserDetailPage extends ConsumerWidget {
       );
       //return Image.network(data.avatarIcon ?? '');
     }, error: (e, st) {
-      return Text("取得失敗");
+      return const Text("取得失敗");
     }, loading: () {
-      return Text("ローディング");
+      return const Text("ローディング");
     });
     return Scaffold(
         appBar: AppBar(
-          title: Text("プロフィール"),
+          title: const Text("プロフィール"),
         ),
         body: body);
     /*
@@ -110,6 +110,5 @@ class UserDetailPage extends ConsumerWidget {
 
       ),
     );*/
-    return Text("userId:${userId}");
   }
 }

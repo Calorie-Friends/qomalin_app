@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
@@ -16,6 +17,28 @@ void main() async {
   await setupWhenBeforeRunApp();
   runApp(const ProviderScope(child: App()));
 }
+
+final _updateDeviceTokenProvider = FutureProvider.autoDispose.family( (ref, String? uid) async {
+  if(uid == null) {
+    return;
+  }
+  final String? token;
+  if(Platform.isIOS || Platform.isMacOS) {
+    token = await FirebaseMessaging.instance.getToken();
+  }else{
+    token = await FirebaseMessaging.instance.getAPNSToken();
+  }
+
+  final privateUserRef = ref.read(FirestoreProviders.firestoreProvider())
+    .collection('private_users')
+    .doc(uid);
+  if(!(await privateUserRef.get()).exists) {
+    await privateUserRef.set({});
+  }
+  await privateUserRef.collection('device_tokens')
+    .doc(token)
+    .set({});
+});
 
 class App extends ConsumerWidget {
   const App({Key? key}) : super(key: key);
@@ -32,6 +55,16 @@ class App extends ConsumerWidget {
     }
 
     final r = ref.watch(router);
+    ref.watch(_updateDeviceTokenProvider(ref.read(authNotifierProvider).fireAuthUser?.uid))
+        .when(data: (d) {
+
+        },
+        error: (e,st) {
+          log('fcmToken登録失敗 error:$e, stackTrace:$st');
+        },
+        loading: () {
+
+        });
     return MaterialApp.router(
       routeInformationParser: r.routeInformationParser,
       routerDelegate: r.routerDelegate,
@@ -78,59 +111,6 @@ class ErrorPage extends StatelessWidget {
   }
 }
 
-class MyHomePage extends ConsumerStatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
-
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends ConsumerState<MyHomePage> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: const NearQuestionsExamplePage(),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          final uid = ref.read(authNotifierProvider).fireAuthUser?.uid;
-          final location = await Geolocator.getLastKnownPosition();
-          ref.read(QuestionProviders.questionRepositoryProvider()).create(
-              Question(
-                  id: "",
-                  title: "piyo",
-                  text: "aaaa",
-                  address: null,
-                  location: LocationPoint(
-                      latitude: location!.latitude,
-                      longitude: location.longitude),
-                  userId: uid!,
-                  imageUrls: const [],
-                  user: null,
-                  createdAt: DateTime.now(),
-                  updatedAt: DateTime.now()));
-        },
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
-    );
-  }
-}
 
 class NearQuestionsExamplePage extends ConsumerWidget {
   const NearQuestionsExamplePage({Key? key}) : super(key: key);
