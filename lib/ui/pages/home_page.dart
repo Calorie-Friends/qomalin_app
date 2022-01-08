@@ -25,9 +25,9 @@ class _HomePageState extends State<HomePage> {
                 Tab(text: '最近'),
               ]),
             ),
-            body: TabBarView(
+            body: const TabBarView(
               children: [
-                const NearQuestionPage(),
+                NearQuestionPage(),
                 LatestQuestionPage(),
               ],
             ),
