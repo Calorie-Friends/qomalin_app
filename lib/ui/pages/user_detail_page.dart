@@ -65,6 +65,9 @@ class UserDetailPage extends ConsumerWidget {
               data.description ?? '',
               style: const TextStyle(fontSize: 15),
             ),
+            const SizedBox(
+              height: 25,
+            ),
             UserQuestionList(data.id, shrinkWrap: true, physics: const NeverScrollableScrollPhysics(),),
           ],
         ),
