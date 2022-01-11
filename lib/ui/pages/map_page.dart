@@ -121,7 +121,9 @@ class MapState extends ConsumerState {
                         onQuestionPressed: (){
                           GoRouter.of(context).push('/questions/${q.id}/show');
                         },
-                        onUserPressed:(){}
+                        onUserPressed:(){
+                          GoRouter.of(context).push("/users/${q.userId}/show");
+                        },
                     );
                   },
                   onPageChanged: (index) async {

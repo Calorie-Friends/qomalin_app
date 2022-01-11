@@ -23,7 +23,9 @@ class LatestQuestionPage extends ConsumerWidget {
               onQuestionSelectedListener: (q){
                 context.push('/questions/${q.id}/show');
               },
-              onQuestionUserPressedListener: (u){},
+              onQuestionUserPressedListener: (u){
+                GoRouter.of(context).push("/users/${u.id}/show");
+              },
               questions: questions
           );
         },
