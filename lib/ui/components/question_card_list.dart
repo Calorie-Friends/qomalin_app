@@ -10,18 +10,24 @@ class QuestionCardList extends StatelessWidget{
   final QuestionCardSelectedListener onQuestionSelectedListener;
   final QuestionUserPressedListener onQuestionUserPressedListener;
   final List<Question> questions;
-
+  final bool shrinkWrap;
+  final ScrollPhysics? physics;
   const QuestionCardList(
   {Key? key,
     required this.onQuestionSelectedListener,
     required this.onQuestionUserPressedListener,
-    required this.questions})
+    required this.questions,
+    this.shrinkWrap = false,
+    this.physics,
+    })
     : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
       padding: const EdgeInsets.all(4),
+      shrinkWrap: shrinkWrap,
+      physics: physics,
       itemBuilder:(BuildContext context,int index){
         final question = questions[index];
         return QuestionCard(

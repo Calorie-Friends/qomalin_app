@@ -13,7 +13,9 @@ final _userQuestionsStreamProvider = StreamProvider.autoDispose.family((ref, Str
 
 class UserQuestionList extends ConsumerWidget {
   final userId;
-  UserQuestionList(this.userId, {Key? key}) : super(key: key);
+  final bool shrinkWrap;
+  final ScrollPhysics? physics;
+  UserQuestionList(this.userId, {Key? key, this.shrinkWrap = false, this.physics}) : super(key: key);
 
   // ignore: prefer_typing_uninitialized_variables
 
@@ -30,7 +32,9 @@ class UserQuestionList extends ConsumerWidget {
                 context.push('/questions/${q.id}/show');
               },
               onQuestionUserPressedListener: (u){},
-              questions: questions
+              questions: questions,
+              shrinkWrap: shrinkWrap,
+              physics: physics,
           );
         },
         error: (err, stack){
