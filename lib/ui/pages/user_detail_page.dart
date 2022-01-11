@@ -59,6 +59,7 @@ class UserDetailPage extends ConsumerWidget {
             const SizedBox(
               height: 25,
             ),
+            //TODO:tabbarの追加
             UserQuestionList(data.id, shrinkWrap: true, physics: const NeverScrollableScrollPhysics(),),
           ],
         ),
