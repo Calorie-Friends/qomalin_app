@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:qomalin_app/models/entities/question.dart';
@@ -13,9 +12,9 @@ final _userQuestionsStreamProvider = StreamProvider.autoDispose.family((ref, Str
 
 class UserQuestionList extends ConsumerWidget {
   final userId;
-  UserQuestionList(this.userId, {Key? key}) : super(key: key);
-
-  // ignore: prefer_typing_uninitialized_variables
+  final bool shrinkWrap;
+  final ScrollPhysics? physics;
+  UserQuestionList(this.userId, {Key? key, this.shrinkWrap = false, this.physics}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -30,7 +29,9 @@ class UserQuestionList extends ConsumerWidget {
                 context.push('/questions/${q.id}/show');
               },
               onQuestionUserPressedListener: (u){},
-              questions: questions
+              questions: questions,
+              shrinkWrap: shrinkWrap,
+              physics: physics,
           );
         },
         error: (err, stack){
