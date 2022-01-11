@@ -7,18 +7,21 @@ import 'package:qomalin_app/models/entities/question.dart';
 import 'package:qomalin_app/providers/questions.dart';
 import 'package:qomalin_app/ui/components/question_card_list.dart';
 
-final _userQuestionsStreamProvider = StreamProvider.autoDispose((ref) {
-  //TODO: ページ呼び出し元から渡されるUserIdをquestionsByUserメソッドの引数にセットする
-  return ref.read(QuestionProviders.questionServiceProvider()).questionsByUser(userId: "IJsmDX5VZxY3qnc8Qz2K3qRwmth2");
+final _userQuestionsStreamProvider = StreamProvider.autoDispose.family((ref, String userId) {
+  return ref.read(QuestionProviders.questionServiceProvider()).questionsByUser(userId: userId);
 });
+
 class UserQuestionList extends ConsumerWidget {
   final userId;
-  const UserQuestionList(this.userId, {Key? key}) : super(key: key);
+  UserQuestionList(this.userId, {Key? key}) : super(key: key);
 
+  // ignore: prefer_typing_uninitialized_variables
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    AsyncValue<List<Question>> latestQuestionsStream = ref.watch(_userQuestionsStreamProvider);
+
+
+    AsyncValue<List<Question>> latestQuestionsStream = ref.watch(_userQuestionsStreamProvider(userId));
 
     return latestQuestionsStream.when(
         data: (questions){
@@ -40,6 +43,3 @@ class UserQuestionList extends ConsumerWidget {
         });
   }
 }
-
-
-
