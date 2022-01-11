@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:qomalin_app/models/entities/question.dart';
@@ -16,8 +15,6 @@ class UserQuestionList extends ConsumerWidget {
   final bool shrinkWrap;
   final ScrollPhysics? physics;
   UserQuestionList(this.userId, {Key? key, this.shrinkWrap = false, this.physics}) : super(key: key);
-
-  // ignore: prefer_typing_uninitialized_variables
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
