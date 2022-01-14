@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -31,6 +33,7 @@ class UserAnswersList extends ConsumerWidget{
           );
         },
         error: (err, stack){
+          log("answer load error", error: err, stackTrace: stack);
           return const Text("取得失敗");
         },
         loading: (){
