@@ -8,6 +8,9 @@ class AnswerService {
   Stream<List<Answer>> findByQuestion(String questionId) {
     throw UnimplementedError();
   }
+  Stream<List<Answer>> findByUser({required String userId}) {
+    throw UnimplementedError();
+  }
 }
 
 class AnswerServiceFirestoreImpl implements AnswerService {
@@ -32,6 +35,22 @@ class AnswerServiceFirestoreImpl implements AnswerService {
 
     await for(final answer in answersStream) {
       yield await Future.wait(answer.docs.map((e) async => await e.data().toEntity()).toList());
+    }
+  }
+
+  @override
+  Stream<List<Answer>> findByUser({required String userId}) async*{
+    final answersStream = reader(FirestoreProviders.firestoreProvider())
+        .collectionGroup('answers')
+        .where("userId", isEqualTo: userId)
+        .orderBy('createdAt')
+        .snapshots();
+
+    await for(final answer in answersStream) {
+      final dtoList = answer.docs.map((e) => AnswerFireDTO.fromDocument(e))
+        .map((e) => e.toEntity());
+      final answers = await Future.wait(dtoList);
+      yield answers;
     }
   }
 }
