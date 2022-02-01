@@ -3,6 +3,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:qomalin_app/errors/auth_error.dart';
 import 'package:qomalin_app/providers/auth.dart';
+import 'package:qomalin_app/providers/user.dart';
 
 enum AuthStateType { authenticated, unauthorized, loading }
 
