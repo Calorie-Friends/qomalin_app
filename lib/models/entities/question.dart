@@ -170,7 +170,7 @@ class QuestionFireDTO {
         imageUrls: (ds['imageUrls'] as List<dynamic>?)?.map((el) => el.toString()).toList() ?? [],
         location: LocationPoint(
             latitude: location.latitude, longitude: location.longitude),
-        createdAt: ds['createdAt'].toDate(),
-        updatedAt: ds['updatedAt'].toDate());
+        createdAt: ds['createdAt']?.toDate(),
+        updatedAt: ds['updatedAt']?.toDate());
   }
 }

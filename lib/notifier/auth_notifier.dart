@@ -3,6 +3,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:qomalin_app/errors/auth_error.dart';
 import 'package:qomalin_app/providers/auth.dart';
+import 'package:qomalin_app/providers/user.dart';
 
 enum AuthStateType { authenticated, unauthorized, loading }
 
@@ -36,7 +37,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
   }
 
   /// Google認証
-  Future signInWithGoogle() async {
+  Future<bool> signInWithGoogle() async {
     try {
       final gUser = await GoogleSignIn(scopes: []).signIn();
       final googleAuth = await gUser?.authentication;
@@ -50,7 +51,9 @@ class AuthNotifier extends StateNotifier<AuthState> {
         state = AuthState.unauthorized();
       } else {
         state = AuthState.authenticated(uc.user!);
+        return uc.user?.metadata.lastSignInTime == uc.user?.metadata.creationTime;
       }
+      return false;
     } on FirebaseAuthException {
       state = AuthState.unauthorized();
       throw AuthFailedException();
