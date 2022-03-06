@@ -1,16 +1,24 @@
-# qomalin_app
+# Qomalin
+位置情報と質問をマッピングしてくれる質問アプリです。
 
-A new Flutter project.
+## 機能
+### 近隣質問一覧
+付近の質問を一覧表示してくれます。
 
-## Getting Started
+### 最近の質問
+最近の質問順で一覧表示してくれます。
 
-This project is a starting point for a Flutter application.
+### 質問マップ
+質問を地図上で表示することができます。<br>
+長押しをすることでそのポイントに質問を作成することもできます。
 
-A few resources to get you started if this is your first Flutter project:
+### 質問作成
+現在位置に質問を作成することができます。
+複数の画像とテキストを添付することができます。
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+### 回答機能
+質問に対して回答を作成することができます。
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+### お礼機能
+回答者に対していいねと任意のメッセージを添付して
+感謝の気持ちを表すことができます。
